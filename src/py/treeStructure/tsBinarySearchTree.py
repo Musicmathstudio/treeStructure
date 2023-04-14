@@ -1,6 +1,6 @@
-from tsBinaryNode import TSBinaryNode
+from .tsBinaryNode import TSBinaryNode
 from typing import Union
-from tsConstants import TSConstants
+from .tsConstants import TSConstants
 
 
 class TSBinarySearchTree:
