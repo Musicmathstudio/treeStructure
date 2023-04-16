@@ -7,7 +7,8 @@ class TSBinarySearchTree:
 
     def __init__(self, node: Union[TSBinaryNode, None] = None, walk_strategy: str = TSConstants.inOrder):
         self.rootNode: Union[TSBinaryNode, None] = node
-        self.rootNode.parentNode = None
+        if self.rootNode:
+            self.rootNode.parentNode = None
         self.walkStrategy = walk_strategy
 
     def insertNode(self, node: TSBinaryNode):
@@ -85,6 +86,9 @@ class TSBinarySearchTree:
                                 maxNodeInLeft.parentNode = iterNode.parentNode
                                 maxNodeInLeft.leftChildNode = iterNode.leftChildNode
                                 maxNodeInLeft.rightChildNode = iterNode.rightChildNode
+                        iterNode.leftChildNode = None
+                        iterNode.rightChildNode = None
+                        iterNode.parentNode = None
                         break
                     elif iterNode.order >= order:
                         if iterNode.leftChildNode:
@@ -166,5 +170,16 @@ class TSBinarySearchTree:
         node = self.getMinOrderNode()
         self.deleteNodeByOrder(node.order)
 
-    def beautifulPrint(self):
-        pass
+    def beautifulPrint(self) -> Union[dict, None]:
+        return self._beautifulPrint(self.rootNode)
+
+    def _beautifulPrint(self, node: Union[TSBinaryNode, None]) -> Union[dict, None]:
+        if not node:
+            return None
+        else:
+            return {
+                'order': node.order,
+                'value': node.value,
+                'leftChildNode': self._beautifulPrint(node.leftChildNode),
+                'rightChildNode': self._beautifulPrint(node.rightChildNode)
+            }
