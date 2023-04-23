@@ -98,7 +98,7 @@ class TSBinarySearchTree:
                     else:
                         break
 
-    def searchNode(self, order: float) -> Union[TSBinaryNode, None]:
+    def getNodeByOrder(self, order: float) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -133,6 +133,44 @@ class TSBinarySearchTree:
         leftNodeCount = self._getTreeNodeCount(node.leftChildNode)
         rightNodeCount = self._getTreeNodeCount(node.rightChildNode)
         return leftNodeCount + 1 + rightNodeCount
+
+    def getOrderedList(self):
+        return self._getOrderedList(self.rootNode)
+
+    def _getOrderedList(self, node: Union[TSBinaryNode, None]) -> list:
+        if not node:
+            return []
+        leftOrderedList = self._getOrderedList(node.leftChildNode)
+        rightOrderedList = self._getOrderedList(node.rightChildNode)
+        return leftOrderedList + [node] + rightOrderedList
+
+    def getRankByOrder(self, order: float) -> int:
+        node = self.getNodeByOrder(order)
+        if not node:
+            return -1
+        else:
+            rank = self._getTreeNodeCount(node.leftChildNode) + 1
+            iterNode = node
+            while iterNode.parentNode:
+                if iterNode.parentNode.rightChildNode == iterNode:
+                    rank += self._getTreeNodeCount(iterNode.parentNode.leftChildNode) + 1
+                iterNode = iterNode.parentNode
+            return rank - 1
+
+    def getNodeByRank(self, rank: int) -> Union[TSBinaryNode, None]:
+        if rank < 0:
+            return None
+        node = self.rootNode
+        while node:
+            leftCount = self._getTreeNodeCount(node.leftChildNode)
+            if leftCount == rank:
+                return node
+            elif leftCount - 1 < rank:
+                rank = rank - leftCount - 1
+                node = node.rightChildNode
+            else:
+                node = node.leftChildNode
+        return None
 
     def getMaxOrderNode(self) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
