@@ -1,120 +1,115 @@
 from .tsBinaryNode import TSBinaryNode
 from typing import Union
-from .tsConstants import TSConstants
 
 
 class TSBinarySearchTree:
 
-    def __init__(self, node: Union[TSBinaryNode, None] = None, walk_strategy: str = TSConstants.inOrder):
+    def __init__(self, node: Union[TSBinaryNode, None] = None):
         self.rootNode: Union[TSBinaryNode, None] = node
         if self.rootNode:
             self.rootNode.parentNode = None
-        self.walkStrategy = walk_strategy
 
     def insertNode(self, node: TSBinaryNode):
-        if self.walkStrategy == TSConstants.inOrder:
-            if not self.rootNode:
-                self.rootNode = node
-                self.rootNode.parentNode = None
-            else:
-                iterNode = self.rootNode
-                while iterNode:
-                    if iterNode.order >= node.order:
-                        if iterNode.leftChildNode:
-                            iterNode = iterNode.leftChildNode
-                        else:
-                            iterNode.leftChildNode = node
-                            iterNode.leftChildNode.parentNode = iterNode
-                            break
-                    else:
-                        if iterNode.rightChildNode:
-                            iterNode = iterNode.rightChildNode
-                        else:
-                            iterNode.rightChildNode = node
-                            iterNode.rightChildNode.parentNode = iterNode
-                            break
-
-    def deleteNodeByOrder(self, order: float):
-        if self.walkStrategy == TSConstants.inOrder:
-            if not self.rootNode:
-                return
-            else:
-                iterNode = self.rootNode
-                while iterNode:
-                    if iterNode.order == order:
-                        if not iterNode.leftChildNode and not iterNode.rightChildNode:
-                            if iterNode.parentNode.leftChildNode == iterNode:
-                                iterNode.parentNode.leftChildNode = None
-                            else:
-                                iterNode.parentNode.rightChildNode = None
-                        elif iterNode.leftChildNode and not iterNode.rightChildNode:
-                            if iterNode.parentNode.leftChildNode == iterNode:
-                                iterNode.parentNode.leftChildNode = iterNode.leftChildNode
-                            else:
-                                iterNode.parentNode.rightChildNode = iterNode.leftChildNode
-                            iterNode.leftChildNode.parentNode = iterNode.parentNode
-                        elif not iterNode.leftChildNode and iterNode.rightChildNode:
-                            if iterNode.parentNode.leftChildNode == iterNode:
-                                iterNode.parentNode.leftChildNode = iterNode.rightChildNode
-                            else:
-                                iterNode.parentNode.rightChildNode = iterNode.rightChildNode
-                            iterNode.rightChildNode.parentNode = iterNode.parentNode
-                        else:
-                            maxNodeInLeft = iterNode.leftChildNode
-                            if not maxNodeInLeft.rightChildNode:
-                                if iterNode.parentNode.leftChildNode == iterNode:
-                                    iterNode.parentNode.leftChildNode = maxNodeInLeft
-                                else:
-                                    iterNode.parentNode.rightChildNode = maxNodeInLeft
-                                maxNodeInLeft.parentNode = iterNode.parentNode
-                                maxNodeInLeft.rightChildNode = iterNode.rightChildNode
-                            else:
-                                while maxNodeInLeft:
-                                    if maxNodeInLeft.rightChildNode:
-                                        maxNodeInLeft = maxNodeInLeft.rightChildNode
-                                    else:
-                                        break
-
-                                maxNodeInLeft.parentNode.rightChildNode = maxNodeInLeft.leftChildNode
-                                if maxNodeInLeft.leftChildNode:
-                                    maxNodeInLeft.leftChildNode.parentNode = maxNodeInLeft.parentNode
-
-                                if iterNode.parentNode.leftChildNode == iterNode:
-                                    iterNode.parentNode.leftChildNode = maxNodeInLeft
-                                else:
-                                    iterNode.parentNode.rightChildNode = maxNodeInLeft
-                                maxNodeInLeft.parentNode = iterNode.parentNode
-                                maxNodeInLeft.leftChildNode = iterNode.leftChildNode
-                                maxNodeInLeft.rightChildNode = iterNode.rightChildNode
-                        iterNode.leftChildNode = None
-                        iterNode.rightChildNode = None
-                        iterNode.parentNode = None
-                        break
-                    elif iterNode.order >= order:
-                        if iterNode.leftChildNode:
-                            iterNode = iterNode.leftChildNode
-                        else:
-                            break
-                    else:
-                        if iterNode.rightChildNode:
-                            iterNode = iterNode.rightChildNode
-                        else:
-                            break
-
-    def searchNode(self, order: float) -> Union[TSBinaryNode, None]:
-        if self.walkStrategy == TSConstants.inOrder:
-            if not self.rootNode:
-                return None
-            else:
-                iterNode = self.rootNode
-                while iterNode:
-                    if iterNode.order == order:
-                        return iterNode
-                    elif iterNode.order >= order:
+        if not self.rootNode:
+            self.rootNode = node
+            self.rootNode.parentNode = None
+        else:
+            iterNode = self.rootNode
+            while iterNode:
+                if iterNode.order >= node.order:
+                    if iterNode.leftChildNode:
                         iterNode = iterNode.leftChildNode
                     else:
+                        iterNode.leftChildNode = node
+                        iterNode.leftChildNode.parentNode = iterNode
+                        break
+                else:
+                    if iterNode.rightChildNode:
                         iterNode = iterNode.rightChildNode
-                return None
+                    else:
+                        iterNode.rightChildNode = node
+                        iterNode.rightChildNode.parentNode = iterNode
+                        break
+
+    def deleteNodeByOrder(self, order: float):
+        if not self.rootNode:
+            return
+        else:
+            iterNode = self.rootNode
+            while iterNode:
+                if iterNode.order == order:
+                    if not iterNode.leftChildNode and not iterNode.rightChildNode:
+                        if iterNode.parentNode.leftChildNode == iterNode:
+                            iterNode.parentNode.leftChildNode = None
+                        else:
+                            iterNode.parentNode.rightChildNode = None
+                    elif iterNode.leftChildNode and not iterNode.rightChildNode:
+                        if iterNode.parentNode.leftChildNode == iterNode:
+                            iterNode.parentNode.leftChildNode = iterNode.leftChildNode
+                        else:
+                            iterNode.parentNode.rightChildNode = iterNode.leftChildNode
+                        iterNode.leftChildNode.parentNode = iterNode.parentNode
+                    elif not iterNode.leftChildNode and iterNode.rightChildNode:
+                        if iterNode.parentNode.leftChildNode == iterNode:
+                            iterNode.parentNode.leftChildNode = iterNode.rightChildNode
+                        else:
+                            iterNode.parentNode.rightChildNode = iterNode.rightChildNode
+                        iterNode.rightChildNode.parentNode = iterNode.parentNode
+                    else:
+                        maxNodeInLeft = iterNode.leftChildNode
+                        if not maxNodeInLeft.rightChildNode:
+                            if iterNode.parentNode.leftChildNode == iterNode:
+                                iterNode.parentNode.leftChildNode = maxNodeInLeft
+                            else:
+                                iterNode.parentNode.rightChildNode = maxNodeInLeft
+                            maxNodeInLeft.parentNode = iterNode.parentNode
+                            maxNodeInLeft.rightChildNode = iterNode.rightChildNode
+                        else:
+                            while maxNodeInLeft:
+                                if maxNodeInLeft.rightChildNode:
+                                    maxNodeInLeft = maxNodeInLeft.rightChildNode
+                                else:
+                                    break
+
+                            maxNodeInLeft.parentNode.rightChildNode = maxNodeInLeft.leftChildNode
+                            if maxNodeInLeft.leftChildNode:
+                                maxNodeInLeft.leftChildNode.parentNode = maxNodeInLeft.parentNode
+
+                            if iterNode.parentNode.leftChildNode == iterNode:
+                                iterNode.parentNode.leftChildNode = maxNodeInLeft
+                            else:
+                                iterNode.parentNode.rightChildNode = maxNodeInLeft
+                            maxNodeInLeft.parentNode = iterNode.parentNode
+                            maxNodeInLeft.leftChildNode = iterNode.leftChildNode
+                            maxNodeInLeft.rightChildNode = iterNode.rightChildNode
+                    iterNode.leftChildNode = None
+                    iterNode.rightChildNode = None
+                    iterNode.parentNode = None
+                    break
+                elif iterNode.order >= order:
+                    if iterNode.leftChildNode:
+                        iterNode = iterNode.leftChildNode
+                    else:
+                        break
+                else:
+                    if iterNode.rightChildNode:
+                        iterNode = iterNode.rightChildNode
+                    else:
+                        break
+
+    def searchNode(self, order: float) -> Union[TSBinaryNode, None]:
+        if not self.rootNode:
+            return None
+        else:
+            iterNode = self.rootNode
+            while iterNode:
+                if iterNode.order == order:
+                    return iterNode
+                elif iterNode.order >= order:
+                    iterNode = iterNode.leftChildNode
+                else:
+                    iterNode = iterNode.rightChildNode
+            return None
 
     def getTreeHeight(self) -> int:
         if not self.rootNode:
@@ -139,28 +134,26 @@ class TSBinarySearchTree:
         return leftNodeCount + 1 + rightNodeCount
 
     def getMaxOrderNode(self) -> Union[TSBinaryNode, None]:
-        if self.walkStrategy == TSConstants.inOrder:
-            if not self.rootNode:
-                return None
-            else:
-                iterNode = self.rootNode
-                while iterNode:
-                    if iterNode.rightChildNode:
-                        iterNode = iterNode.rightChildNode
-                    else:
-                        return iterNode
+        if not self.rootNode:
+            return None
+        else:
+            iterNode = self.rootNode
+            while iterNode:
+                if iterNode.rightChildNode:
+                    iterNode = iterNode.rightChildNode
+                else:
+                    return iterNode
 
     def getMinOrderNode(self) -> Union[TSBinaryNode, None]:
-        if self.walkStrategy == TSConstants.inOrder:
-            if not self.rootNode:
-                return None
-            else:
-                iterNode = self.rootNode
-                while iterNode:
-                    if iterNode.leftChildNode:
-                        iterNode = iterNode.leftChildNode
-                    else:
-                        return iterNode
+        if not self.rootNode:
+            return None
+        else:
+            iterNode = self.rootNode
+            while iterNode:
+                if iterNode.leftChildNode:
+                    iterNode = iterNode.leftChildNode
+                else:
+                    return iterNode
 
     def deleteMaxOrderNode(self):
         node = self.getMaxOrderNode()
