@@ -1,5 +1,6 @@
 import time
 from typing import Union
+from .tsConstants import TSConstants
 
 
 class TSBinaryNode:
@@ -12,17 +13,26 @@ class TSBinaryNode:
         self.parentNode: Union[TSBinaryNode, None] = None
 
     def beautifulPrint(self) -> dict:
-        res = {'order': self.order, 'value': self.value}
+        res = {TSConstants.BinaryNode.order: self.order, TSConstants.BinaryNode.value: self.value}
         if self.leftChildNode:
-            res['leftChildNode'] = {'order': self.leftChildNode.order, 'value': self.leftChildNode.value}
+            res[TSConstants.BinaryNode.leftChildNode] = {
+                TSConstants.BinaryNode.order: self.leftChildNode.order,
+                TSConstants.BinaryNode.value: self.leftChildNode.value
+            }
         else:
-            res['leftChildNode'] = dict()
+            res[TSConstants.BinaryNode.leftChildNode] = dict()
         if self.rightChildNode:
-            res['rightChildNode'] = {'order': self.rightChildNode.order, 'value': self.rightChildNode.value}
+            res[TSConstants.BinaryNode.rightChildNode] = {
+                TSConstants.BinaryNode.order: self.rightChildNode.order,
+                TSConstants.BinaryNode.value: self.rightChildNode.value
+            }
         else:
-            res['rightChildNode'] = dict()
+            res[TSConstants.BinaryNode.rightChildNode] = dict()
         if self.parentNode:
-            res['parentNode'] = {'order': self.parentNode.order, 'value': self.parentNode.value}
+            res[TSConstants.BinaryNode.parentNode] = {
+                TSConstants.BinaryNode.order: self.parentNode.order,
+                TSConstants.BinaryNode.value: self.parentNode.value
+            }
         else:
-            res['parentNode'] = dict()
+            res[TSConstants.BinaryNode.parentNode] = dict()
         return res

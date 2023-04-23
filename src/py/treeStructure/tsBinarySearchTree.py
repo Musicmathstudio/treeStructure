@@ -1,5 +1,6 @@
 from .tsBinaryNode import TSBinaryNode
 from typing import Union
+from .tsConstants import TSConstants
 
 
 class TSBinarySearchTree:
@@ -171,8 +172,8 @@ class TSBinarySearchTree:
             return None
         else:
             return {
-                'order': node.order,
-                'value': node.value,
-                'leftChildNode': self._beautifulPrint(node.leftChildNode),
-                'rightChildNode': self._beautifulPrint(node.rightChildNode)
+                TSConstants.BinaryNode.order: node.order,
+                TSConstants.BinaryNode.value: node.value,
+                TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
+                TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
             }

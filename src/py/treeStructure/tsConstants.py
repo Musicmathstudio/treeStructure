@@ -1,4 +1,7 @@
 class TSConstants:
-    inOrder = 'inOrder'
-    preOrder = 'preOrder'
-    postOrder = 'postOrder'
+    class BinaryNode:
+        order = 'order'
+        value = 'value'
+        leftChildNode = 'leftChildNode'
+        rightChildNode = 'rightChildNode'
+        parentNode = 'parentNode'
