@@ -40,29 +40,41 @@ class TSBinarySearchTree:
             while iterNode:
                 if iterNode.order == order:
                     if not iterNode.leftChildNode and not iterNode.rightChildNode:
-                        if iterNode.parentNode.leftChildNode == iterNode:
-                            iterNode.parentNode.leftChildNode = None
+                        if iterNode.parentNode:
+                            if iterNode.parentNode.leftChildNode == iterNode:
+                                iterNode.parentNode.leftChildNode = None
+                            else:
+                                iterNode.parentNode.rightChildNode = None
                         else:
-                            iterNode.parentNode.rightChildNode = None
+                            self.rootNode = None
                     elif iterNode.leftChildNode and not iterNode.rightChildNode:
-                        if iterNode.parentNode.leftChildNode == iterNode:
-                            iterNode.parentNode.leftChildNode = iterNode.leftChildNode
+                        if iterNode.parentNode:
+                            if iterNode.parentNode.leftChildNode == iterNode:
+                                iterNode.parentNode.leftChildNode = iterNode.leftChildNode
+                            else:
+                                iterNode.parentNode.rightChildNode = iterNode.leftChildNode
                         else:
-                            iterNode.parentNode.rightChildNode = iterNode.leftChildNode
+                            self.rootNode = iterNode.leftChildNode
                         iterNode.leftChildNode.parentNode = iterNode.parentNode
                     elif not iterNode.leftChildNode and iterNode.rightChildNode:
-                        if iterNode.parentNode.leftChildNode == iterNode:
-                            iterNode.parentNode.leftChildNode = iterNode.rightChildNode
+                        if iterNode.parentNode:
+                            if iterNode.parentNode.leftChildNode == iterNode:
+                                iterNode.parentNode.leftChildNode = iterNode.rightChildNode
+                            else:
+                                iterNode.parentNode.rightChildNode = iterNode.rightChildNode
                         else:
-                            iterNode.parentNode.rightChildNode = iterNode.rightChildNode
+                            self.rootNode = iterNode.rightChildNode
                         iterNode.rightChildNode.parentNode = iterNode.parentNode
                     else:
                         maxNodeInLeft = iterNode.leftChildNode
                         if not maxNodeInLeft.rightChildNode:
-                            if iterNode.parentNode.leftChildNode == iterNode:
-                                iterNode.parentNode.leftChildNode = maxNodeInLeft
+                            if iterNode.parentNode:
+                                if iterNode.parentNode.leftChildNode == iterNode:
+                                    iterNode.parentNode.leftChildNode = maxNodeInLeft
+                                else:
+                                    iterNode.parentNode.rightChildNode = maxNodeInLeft
                             else:
-                                iterNode.parentNode.rightChildNode = maxNodeInLeft
+                                self.rootNode = maxNodeInLeft
                             maxNodeInLeft.parentNode = iterNode.parentNode
                             maxNodeInLeft.rightChildNode = iterNode.rightChildNode
                         else:
@@ -76,10 +88,13 @@ class TSBinarySearchTree:
                             if maxNodeInLeft.leftChildNode:
                                 maxNodeInLeft.leftChildNode.parentNode = maxNodeInLeft.parentNode
 
-                            if iterNode.parentNode.leftChildNode == iterNode:
-                                iterNode.parentNode.leftChildNode = maxNodeInLeft
+                            if iterNode.parentNode:
+                                if iterNode.parentNode.leftChildNode == iterNode:
+                                    iterNode.parentNode.leftChildNode = maxNodeInLeft
+                                else:
+                                    iterNode.parentNode.rightChildNode = maxNodeInLeft
                             else:
-                                iterNode.parentNode.rightChildNode = maxNodeInLeft
+                                self.rootNode = maxNodeInLeft
                             maxNodeInLeft.parentNode = iterNode.parentNode
                             maxNodeInLeft.leftChildNode = iterNode.leftChildNode
                             maxNodeInLeft.rightChildNode = iterNode.rightChildNode
