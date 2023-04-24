@@ -1,6 +1,7 @@
 from .tsBinaryNode import TSBinaryNode
 from typing import Union
 from .tsConstants import TSConstants
+from typing import List
 
 
 class TSBinarySearchTree:
@@ -149,10 +150,10 @@ class TSBinarySearchTree:
         rightNodeCount = self._getTreeNodeCount(node.rightChildNode)
         return leftNodeCount + 1 + rightNodeCount
 
-    def getOrderedList(self):
+    def getOrderedList(self) -> List[TSBinaryNode]:
         return self._getOrderedList(self.rootNode)
 
-    def _getOrderedList(self, node: Union[TSBinaryNode, None]) -> list:
+    def _getOrderedList(self, node: Union[TSBinaryNode, None]) -> List[TSBinaryNode]:
         if not node:
             return []
         leftOrderedList = self._getOrderedList(node.leftChildNode)
@@ -230,3 +231,34 @@ class TSBinarySearchTree:
                 TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
                 TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
             }
+
+    def balanced(self):
+        orderedList = self.getOrderedList()
+        if len(orderedList) > 2:
+            self.rootNode = self._balanced(orderedList)
+
+    def _balanced(self, orderedList: List[TSBinaryNode]) -> TSBinaryNode:
+        if len(orderedList) == 1:
+            orderedList[0].parentNode = None
+            orderedList[0].leftChildNode = None
+            orderedList[0].rightChildNode = None
+            return orderedList[0]
+        elif len(orderedList) == 2:
+            orderedList[0].parentNode = orderedList[1]
+            orderedList[0].leftChildNode = None
+            orderedList[0].rightChildNode = None
+            orderedList[1].parentNode = None
+            orderedList[1].leftChildNode = orderedList[0]
+            orderedList[1].rightChildNode = None
+            return orderedList[1]
+        else:
+            centerIndex = len(orderedList) // 2
+            centerNode = orderedList[centerIndex]
+            leftNode = self._balanced(orderedList[:centerIndex])
+            rightNode = self._balanced(orderedList[centerIndex + 1:])
+            centerNode.parentNode = None
+            centerNode.leftChildNode = leftNode
+            centerNode.rightChildNode = rightNode
+            leftNode.parentNode = centerNode
+            rightNode.parentNode = centerNode
+            return centerNode
