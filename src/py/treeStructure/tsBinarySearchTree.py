@@ -209,14 +209,40 @@ class TSBinarySearchTree:
         return count
 
     def getOrderedList(self) -> List[TSBinaryNode]:
-        return self._getOrderedList(self.rootNode)
+        orderedList = []
+        if not self.rootNode:
+            return orderedList
+        stk = deque()
+        size = 0
+        node = self.rootNode
+        while node or size:
+            while node:
+                stk.append(node)
+                size += 1
+                node = node.leftChildNode
+            node = stk.pop();
+            size -= 1
+            orderedList.append(node);
+            node = node.rightChildNode;
+        return orderedList
 
-    def _getOrderedList(self, node: Union[TSBinaryNode, None]) -> List[TSBinaryNode]:
-        if not node:
-            return []
-        leftOrderedList = self._getOrderedList(node.leftChildNode)
-        rightOrderedList = self._getOrderedList(node.rightChildNode)
-        return leftOrderedList + [node] + rightOrderedList
+    def _getOrderedList(self, rootNode: Union[TSBinaryNode, None]) -> List[TSBinaryNode]:
+        orderedList = []
+        if not rootNode:
+            return orderedList
+        stk = deque()
+        size = 0
+        node = rootNode
+        while node or size:
+            while node:
+                stk.append(node)
+                size += 1
+                node = node.leftChildNode
+            node = stk.pop();
+            size -= 1
+            orderedList.append(node);
+            node = node.rightChildNode;
+        return orderedList
 
     def getRankByOrder(self, order: float) -> int:
         node = self.getNodeByOrder(order)
