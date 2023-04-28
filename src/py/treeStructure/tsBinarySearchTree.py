@@ -1,7 +1,7 @@
 from .tsBinaryNode import TSBinaryNode
-from typing import Union
+from typing import Union, List
 from .tsConstants import TSConstants
-from typing import List
+from collections import deque
 
 
 class TSBinarySearchTree:
@@ -129,26 +129,84 @@ class TSBinarySearchTree:
             return None
 
     def getTreeHeight(self) -> int:
+        height = -1
         if not self.rootNode:
-            return -1
-        return self._getTreeHeight(self.rootNode)
+            return height
+        q = deque()
+        q.append(self.rootNode)
+        size = 1
+        while size:
+            height += 1
+            for i in range(size):
+                node = q.popleft()
+                size -= 1
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                    size += 1
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+                    size += 1
+        return height
 
-    def _getTreeHeight(self, node: Union[TSBinaryNode, None]) -> int:
-        if not node:
-            return 0
-        leftHeight = self._getTreeHeight(node.leftChildNode)
-        rightHeight = self._getTreeHeight(node.rightChildNode)
-        return max(leftHeight, rightHeight) + 1
+    def _getTreeHeight(self, rootNode: Union[TSBinaryNode, None]) -> int:
+        height = -1
+        if not rootNode:
+            return height
+        q = deque()
+        q.append(rootNode)
+        size = 1
+        while size:
+            height += 1
+            for i in range(size):
+                node = q.popleft()
+                size -= 1
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                    size += 1
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+                    size += 1
+        return height
 
     def getTreeNodeCount(self) -> int:
-        return self._getTreeNodeCount(self.rootNode)
+        count = 0
+        if not self.rootNode:
+            return count
+        q = deque()
+        q.append(self.rootNode)
+        size = 1
+        while size:
+            count += size
+            for i in range(size):
+                node = q.popleft()
+                size -= 1
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                    size += 1
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+                    size += 1
+        return count
 
-    def _getTreeNodeCount(self, node: Union[TSBinaryNode, None]) -> int:
-        if not node:
-            return 0
-        leftNodeCount = self._getTreeNodeCount(node.leftChildNode)
-        rightNodeCount = self._getTreeNodeCount(node.rightChildNode)
-        return leftNodeCount + 1 + rightNodeCount
+    def _getTreeNodeCount(self, rootNode: Union[TSBinaryNode, None]) -> int:
+        count = 0
+        if not rootNode:
+            return count
+        q = deque()
+        q.append(rootNode)
+        size = 1
+        while size:
+            count += size
+            for i in range(size):
+                node = q.popleft()
+                size -= 1
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                    size += 1
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+                    size += 1
+        return count
 
     def getOrderedList(self) -> List[TSBinaryNode]:
         return self._getOrderedList(self.rootNode)
