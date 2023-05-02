@@ -296,11 +296,27 @@ class TSBinarySearchTree:
 
     def deleteMaxOrderNode(self):
         node = self.getMaxOrderNode()
-        self.deleteNodeByOrder(node.order)
+        if node:
+            if node.parentNode:
+                node.parentNode.rightChildNode = node.leftChildNode
+            else:
+                self.rootNode = node.leftChildNode
+            if node.leftChildNode:
+                node.leftChildNode.parentNode = node.parentNode
+            node.leftChildNode = None
+            node.parentNode = None
 
     def deleteMinOrderNode(self):
         node = self.getMinOrderNode()
-        self.deleteNodeByOrder(node.order)
+        if node:
+            if node.parentNode:
+                node.parentNode.leftChildNode = node.rightChildNode
+            else:
+                self.rootNode = node.rightChildNode
+            if node.rightChildNode:
+                node.rightChildNode.parentNode = node.parentNode
+            node.rightChildNode = None
+            node.parentNode = None
 
     def beautifulPrint(self) -> Union[dict, None]:
         return self._beautifulPrint(self.rootNode)
