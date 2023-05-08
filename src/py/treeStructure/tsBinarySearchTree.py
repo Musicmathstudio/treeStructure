@@ -372,3 +372,20 @@ class TSBinarySearchTree:
             leftNode.parentNode = centerNode
             rightNode.parentNode = centerNode
             return centerNode
+
+    def mergeWithOtherTree(self, tree: 'TSBinarySearchTree'):
+        l1 = self.getOrderedList()
+        l2 = tree.getOrderedList()
+        orderedList = []
+        while l1 and l2:
+            if l1[0].order >= l2[0].order:
+                orderedList.append(l2[0])
+                del l2[0]
+            else:
+                orderedList.append(l1[0])
+                del l1[0]
+        if l1:
+            orderedList = orderedList + l1
+        elif l2:
+            orderedList = orderedList + l2
+        self.rootNode = self._balanced(orderedList)
