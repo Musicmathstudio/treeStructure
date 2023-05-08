@@ -318,19 +318,29 @@ class TSBinarySearchTree:
             node.rightChildNode = None
             node.parentNode = None
 
-    def beautifulPrint(self) -> Union[dict, None]:
-        return self._beautifulPrint(self.rootNode)
+    def beautifulPrint(self, onlyOrder: bool=False) -> Union[dict, None]:
+        return self._beautifulPrint(self.rootNode, onlyOrder)
 
-    def _beautifulPrint(self, node: Union[TSBinaryNode, None]) -> Union[dict, None]:
+    def _beautifulPrint(self, node: Union[TSBinaryNode, None], onlyOrder: bool=False) -> Union[dict, list, None]:
         if not node:
-            return None
+            if onlyOrder:
+                return [None]
+            else:
+                return None
         else:
-            return {
-                TSConstants.BinaryNode.order: node.order,
-                TSConstants.BinaryNode.value: node.value,
-                TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
-                TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
-            }
+            if onlyOrder:
+                return [
+                    node.order,
+                    self._beautifulPrint(node.leftChildNode, onlyOrder),
+                    self._beautifulPrint(node.rightChildNode, onlyOrder)
+                ]
+            else:
+                return {
+                    TSConstants.BinaryNode.order: node.order,
+                    TSConstants.BinaryNode.value: node.value,
+                    TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
+                    TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
+                }
 
     def balanced(self):
         orderedList = self.getOrderedList()
