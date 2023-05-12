@@ -389,3 +389,4 @@ class TSBinarySearchTree:
         elif l2:
             orderedList = orderedList + l2
         self.rootNode = self._balanced(orderedList)
+        tree.rootNode = self.rootNode
