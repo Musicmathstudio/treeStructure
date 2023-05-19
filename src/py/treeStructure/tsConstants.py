@@ -5,3 +5,7 @@ class TSConstants:
         leftChildNode = 'leftChildNode'
         rightChildNode = 'rightChildNode'
         parentNode = 'parentNode'
+
+    class BinaryHeap:
+        max = 'max'
+        min = 'min'
