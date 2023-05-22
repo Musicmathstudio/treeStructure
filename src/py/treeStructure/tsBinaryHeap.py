@@ -22,25 +22,44 @@ class TSBinaryHeap:
         else:
             self.heapDict[node.order] = deque([node])
 
-    # def insertNode(self, node: TSBinaryHeapNode):
-    #     self.heapList.append(node)
-    #     self._appendNodeIntoDict(node)
-    #     node.index = len(self.heapList) - 1
-    #     if not node.index:
-    #         node.parentNode = None
-    #     else:
-    #         nodeCount = len(self.heapList)
-    #         parentIndex = ceil(node.index / 2) - 1
-    #         parentNode = self.heapList[parentIndex]
-    #         node.parentNode = parentNode
-    #         if self.heapStruct == TSConstants.BinaryHeap.min:
-    #             while not node.index and parentNode.order > node.order:
-    #                 self.heapList[parentIndex], self.heapList[node.index] = self.heapList[node.index], self.heapList[parentIndex]
-    #                 parentNode.index, node.index = node.index, parentNode.index
-    #                 node.parentNode = parentNode.parentNode
-    #                 parentNode.parentNode = node
-    #
-    #                 parentNode.leftChildNode, node.leftChildNode = node.leftChildNode, parentNode.leftChildNode
-    #                 parentNode.rightChildNode, node.rightChildNode = node.rightChildNode, parentNode.rightChildNode
-    #                 parentIndex = ceil(node.index / 2) - 1
-    #                 parentNode = self.heapList[parentIndex]
+    def _compare(self, x, y):
+        if self.heapStruct == TSConstants.BinaryHeap.min:
+            return x < y
+        elif self.heapStruct == TSConstants.BinaryHeap.max:
+            return x > y
+
+    def insertNode(self, node: TSBinaryHeapNode):
+        self.heapList.append(node)
+        self._appendNodeIntoDict(node)
+        nodeCount = len(self.heapList)
+        node.index = nodeCount - 1
+        if not node.index:
+            node.parentNode = None
+        else:
+            parentIndex = ceil(node.index / 2) - 1
+            parentNode = self.heapList[parentIndex]
+            node.parentNode = parentNode
+            if node.index % 2:
+                parentNode.leftChildNode = node
+            else:
+                parentNode.rightChildNode = node
+            while node.index <= 0 and self._compare(node.order, parentNode.order):
+                self.heapList[parentIndex], self.heapList[node.index] = \
+                    self.heapList[node.index], self.heapList[parentIndex]
+
+                parentNode.index, node.index = node.index, parentNode.index
+
+                if parentNode.leftChildNode == node:
+                    node.rightChildNode, parentNode.rightChildNode = parentNode.rightChildNode, node.rightChildNode
+                    parentNode.leftChildNode = node.leftChildNode
+                    node.leftChildNode = parentNode
+                else:
+                    node.leftChildNode, parentNode.leftChildNode = parentNode.leftChildNode, node.leftChildNode
+                    parentNode.rightChildNode = node.rightChildNode
+                    node.rightChildNode = parentNode
+
+                node.parentNode = parentNode.parentNode
+                parentNode.parentNode = node
+
+                parentIndex = ceil(node.index / 2) - 1
+                parentNode = node.parentNode
