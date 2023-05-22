@@ -31,8 +31,7 @@ class TSBinaryHeap:
     def insertNode(self, node: TSBinaryHeapNode):
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
-        nodeCount = len(self.heapList)
-        node.index = nodeCount - 1
+        node.index = len(self.heapList) - 1
         if not node.index:
             node.parentNode = None
         else:
@@ -43,7 +42,7 @@ class TSBinaryHeap:
                 parentNode.leftChildNode = node
             else:
                 parentNode.rightChildNode = node
-            while node.index <= 0 and self._compare(node.order, parentNode.order):
+            while node.index > 0 and self._compare(node.order, parentNode.order):
                 self.heapList[parentIndex], self.heapList[node.index] = \
                     self.heapList[node.index], self.heapList[parentIndex]
 
