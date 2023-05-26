@@ -2,7 +2,7 @@ from .tsBinaryHeapNode import TSBinaryHeapNode
 from .tsConstants import TSConstants
 from typing import Union, Deque
 from collections import deque
-from math import ceil
+from math import ceil, floor, log2
 
 
 class TSBinaryHeap:
@@ -21,6 +21,12 @@ class TSBinaryHeap:
             self.heapDict[node.order].append(node)
         else:
             self.heapDict[node.order] = deque([node])
+
+    def _deleteNodeInDictByOrder(self, order: float):
+        if order in self.heapDict:
+            self.heapDict[order].popleft()
+            if not len(self.heapDict[order]):
+                del self.heapDict[order]
 
     def _compare(self, x, y):
         if self.heapStruct == TSConstants.BinaryHeap.min:
@@ -62,3 +68,15 @@ class TSBinaryHeap:
 
                 parentIndex = ceil(node.index / 2) - 1
                 parentNode = node.parentNode
+
+    def getNodeByOrder(self, order: float) -> Union[TSBinaryHeapNode, None]:
+        return self.heapDict.get(order, [None])[0]
+
+    def getTreeHeight(self) -> int:
+        nodeCount = len(self.heapList)
+        if not nodeCount:
+            return -1
+        return floor(log2(nodeCount))
+
+    def getTreeNodeCount(self) -> int:
+        return len(self.heapList)
