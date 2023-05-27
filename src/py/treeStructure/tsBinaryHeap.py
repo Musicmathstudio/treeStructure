@@ -58,13 +58,30 @@ class TSBinaryHeap:
                     node.rightChildNode, parentNode.rightChildNode = parentNode.rightChildNode, node.rightChildNode
                     parentNode.leftChildNode = node.leftChildNode
                     node.leftChildNode = parentNode
+                    if node.rightChildNode:
+                        node.rightChildNode.parentNode = node
+                    if parentNode.rightChildNode:
+                        parentNode.rightChildNode.parentNode = parentNode
+                    if parentNode.leftChildNode:
+                        parentNode.leftChildNode.parentNode = parentNode
                 else:
                     node.leftChildNode, parentNode.leftChildNode = parentNode.leftChildNode, node.leftChildNode
                     parentNode.rightChildNode = node.rightChildNode
                     node.rightChildNode = parentNode
+                    if node.leftChildNode:
+                        node.leftChildNode.parentNode = node
+                    if parentNode.leftChildNode:
+                        parentNode.leftChildNode.parentNode = parentNode
+                    if parentNode.rightChildNode:
+                        parentNode.rightChildNode.parentNode = parentNode
 
                 node.parentNode = parentNode.parentNode
                 parentNode.parentNode = node
+
+                if node.parentNode.leftChildNode == parentNode:
+                    node.parentNode.leftChildNode = node
+                else:
+                    node.parentNode.rightChildNode = node
 
                 parentIndex = ceil(node.index / 2) - 1
                 parentNode = node.parentNode
