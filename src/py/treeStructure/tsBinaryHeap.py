@@ -6,7 +6,7 @@ from math import ceil, floor, log2
 
 
 class TSBinaryHeap:
-    def __init__(self, node: Union[TSBinaryHeapNode, None] = None, heapStruct=TSConstants.BinaryHeap.min):
+    def __init__(self, node: Union[TSBinaryHeapNode, None] = None, heapStruct: str=TSConstants.BinaryHeap.min):
         self.heapStruct = heapStruct
         self.heapList: Deque[TSBinaryHeapNode] = deque()
         self.heapDict = {}
@@ -305,7 +305,10 @@ class TSBinaryHeap:
         if self.heapList:
             return self._beautifulPrint(self.heapList[0], onlyOrder)
         else:
-            return None
+            if onlyOrder:
+                return [None]
+            else:
+                return None
 
     def _beautifulPrint(self, node: Union[TSBinaryHeapNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
         if not node:
@@ -327,3 +330,12 @@ class TSBinaryHeap:
                     TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
                     TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
                 }
+
+    def changeHeapStruct(self):
+        if self.heapStruct == TSConstants.BinaryHeap.max:
+            self.heapStruct = TSConstants.BinaryHeap.min
+        elif self.heapStruct == TSConstants.BinaryHeap.min:
+            self.heapStruct = TSConstants.BinaryHeap.max
+        for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
+            self._swapDown(self.heapList[index])
+
