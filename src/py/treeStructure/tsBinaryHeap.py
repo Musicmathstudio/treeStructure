@@ -265,12 +265,30 @@ class TSBinaryHeap:
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
 
+    def deleteMaxOrderNode(self):
+        if self.heapList:
+            if self.heapStruct == TSConstants.BinaryHeap.max:
+                self.deleteNodeByOrder(self.heapList[0].order)
+            elif self.heapStruct == TSConstants.BinaryHeap.min:
+                maxNode = self.getMaxOrderNode()
+                if maxNode:
+                    self.deleteNodeByOrder(maxNode.order)
+
+    def deleteMinOrderNode(self):
+        if self.heapList:
+            if self.heapStruct == TSConstants.BinaryHeap.min:
+                self.deleteNodeByOrder(self.heapList[0].order)
+            elif self.heapStruct == TSConstants.BinaryHeap.max:
+                minNode = self.getMinOrderNode()
+                if minNode:
+                    self.deleteNodeByOrder(minNode.order)
+
     def getMaxOrderNode(self) -> Union[TSBinaryHeapNode, None]:
         if not self.heapList:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.min:
-                return max(self.heapList[2 ** floor(log2(len(self.heapList))) - 1:], key=lambda node: node.order)
+                return max(self.heapList[floor(len(self.heapList) / 2):], key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.max:
                 return self.heapList[0]
 
@@ -279,7 +297,6 @@ class TSBinaryHeap:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.max:
-                return min(self.heapList[2 ** floor(log2(len(self.heapList))) - 1:], key=lambda node: node.order)
-
+                return min(self.heapList[floor(len(self.heapList) / 2):], key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.min:
                 return self.heapList[0]
