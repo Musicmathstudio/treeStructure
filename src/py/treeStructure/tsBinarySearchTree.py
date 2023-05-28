@@ -318,10 +318,10 @@ class TSBinarySearchTree:
             node.rightChildNode = None
             node.parentNode = None
 
-    def beautifulPrint(self, onlyOrder: bool=False) -> Union[dict, None]:
+    def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
         return self._beautifulPrint(self.rootNode, onlyOrder)
 
-    def _beautifulPrint(self, node: Union[TSBinaryNode, None], onlyOrder: bool=False) -> Union[dict, list, None]:
+    def _beautifulPrint(self, node: Union[TSBinaryNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
         if not node:
             if onlyOrder:
                 return [None]

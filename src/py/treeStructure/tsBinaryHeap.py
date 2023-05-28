@@ -300,3 +300,30 @@ class TSBinaryHeap:
                 return min(self.heapList[floor(len(self.heapList) / 2):], key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.min:
                 return self.heapList[0]
+
+    def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
+        if self.heapList:
+            return self._beautifulPrint(self.heapList[0], onlyOrder)
+        else:
+            return None
+
+    def _beautifulPrint(self, node: Union[TSBinaryHeapNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
+        if not node:
+            if onlyOrder:
+                return [None]
+            else:
+                return None
+        else:
+            if onlyOrder:
+                return [
+                    node.order,
+                    self._beautifulPrint(node.leftChildNode, onlyOrder),
+                    self._beautifulPrint(node.rightChildNode, onlyOrder)
+                ]
+            else:
+                return {
+                    TSConstants.BinaryNode.order: node.order,
+                    TSConstants.BinaryNode.value: node.value,
+                    TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
+                    TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
+                }
