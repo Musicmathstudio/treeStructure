@@ -83,6 +83,86 @@ class TSBinaryHeap:
                     else:
                         return None
 
+    def _swapUp(self, node: TSBinaryHeapNode):
+        parentNode = node.parentNode
+        while parentNode and self._compare(node.order, parentNode.order):
+            self.heapList[parentNode.index], self.heapList[node.index] = \
+                self.heapList[node.index], self.heapList[parentNode.index]
+
+            parentNode.index, node.index = node.index, parentNode.index
+
+            if parentNode.leftChildNode == node:
+                node.rightChildNode, parentNode.rightChildNode = parentNode.rightChildNode, node.rightChildNode
+                parentNode.leftChildNode = node.leftChildNode
+                node.leftChildNode = parentNode
+                if node.rightChildNode:
+                    node.rightChildNode.parentNode = node
+                if parentNode.rightChildNode:
+                    parentNode.rightChildNode.parentNode = parentNode
+                if parentNode.leftChildNode:
+                    parentNode.leftChildNode.parentNode = parentNode
+            else:
+                node.leftChildNode, parentNode.leftChildNode = parentNode.leftChildNode, node.leftChildNode
+                parentNode.rightChildNode = node.rightChildNode
+                node.rightChildNode = parentNode
+                if node.leftChildNode:
+                    node.leftChildNode.parentNode = node
+                if parentNode.leftChildNode:
+                    parentNode.leftChildNode.parentNode = parentNode
+                if parentNode.rightChildNode:
+                    parentNode.rightChildNode.parentNode = parentNode
+
+            node.parentNode = parentNode.parentNode
+            parentNode.parentNode = node
+
+            if node.parentNode:
+                if node.parentNode.leftChildNode == parentNode:
+                    node.parentNode.leftChildNode = node
+                else:
+                    node.parentNode.rightChildNode = node
+
+            parentNode = node.parentNode
+
+    def _swapDown(self, node: TSBinaryHeapNode):
+        childNode = self._getSwapChild(node)
+        while childNode:
+            self.heapList[childNode.index], self.heapList[node.index] = \
+                self.heapList[node.index], self.heapList[childNode.index]
+
+            childNode.index, node.index = node.index, childNode.index
+
+            if node.leftChildNode == childNode:
+                childNode.rightChildNode, node.rightChildNode = node.rightChildNode, childNode.rightChildNode
+                node.leftChildNode = childNode.leftChildNode
+                childNode.leftChildNode = node
+                if childNode.rightChildNode:
+                    childNode.rightChildNode.parentNode = childNode
+                if node.rightChildNode:
+                    node.rightChildNode.parentNode = node
+                if node.leftChildNode:
+                    node.leftChildNode.parentNode = node
+            else:
+                childNode.leftChildNode, node.leftChildNode = node.leftChildNode, childNode.leftChildNode
+                node.rightChildNode = childNode.rightChildNode
+                childNode.rightChildNode = node
+                if childNode.leftChildNode:
+                    childNode.leftChildNode.parentNode = childNode
+                if node.leftChildNode:
+                    node.leftChildNode.parentNode = node
+                if node.rightChildNode:
+                    node.rightChildNode.parentNode = node
+
+            childNode.parentNode = node.parentNode
+            node.parentNode = childNode
+
+            if childNode.parentNode:
+                if childNode.parentNode.leftChildNode == node:
+                    childNode.parentNode.leftChildNode = childNode
+                else:
+                    childNode.parentNode.rightChildNode = childNode
+
+            childNode = self._getSwapChild(node)
+
     def insertNode(self, node: TSBinaryHeapNode):
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
@@ -90,51 +170,12 @@ class TSBinaryHeap:
         if not node.index:
             node.parentNode = None
         else:
-            parentIndex = ceil(node.index / 2) - 1
-            parentNode = self.heapList[parentIndex]
-            node.parentNode = parentNode
+            node.parentNode = self.heapList[ceil(node.index / 2) - 1]
             if node.index % 2:
-                parentNode.leftChildNode = node
+                node.parentNode.leftChildNode = node
             else:
-                parentNode.rightChildNode = node
-            while node.index > 0 and self._compare(node.order, parentNode.order):
-                self.heapList[parentIndex], self.heapList[node.index] = \
-                    self.heapList[node.index], self.heapList[parentIndex]
-
-                parentNode.index, node.index = node.index, parentNode.index
-
-                if parentNode.leftChildNode == node:
-                    node.rightChildNode, parentNode.rightChildNode = parentNode.rightChildNode, node.rightChildNode
-                    parentNode.leftChildNode = node.leftChildNode
-                    node.leftChildNode = parentNode
-                    if node.rightChildNode:
-                        node.rightChildNode.parentNode = node
-                    if parentNode.rightChildNode:
-                        parentNode.rightChildNode.parentNode = parentNode
-                    if parentNode.leftChildNode:
-                        parentNode.leftChildNode.parentNode = parentNode
-                else:
-                    node.leftChildNode, parentNode.leftChildNode = parentNode.leftChildNode, node.leftChildNode
-                    parentNode.rightChildNode = node.rightChildNode
-                    node.rightChildNode = parentNode
-                    if node.leftChildNode:
-                        node.leftChildNode.parentNode = node
-                    if parentNode.leftChildNode:
-                        parentNode.leftChildNode.parentNode = parentNode
-                    if parentNode.rightChildNode:
-                        parentNode.rightChildNode.parentNode = parentNode
-
-                node.parentNode = parentNode.parentNode
-                parentNode.parentNode = node
-
-                if node.parentNode:
-                    if node.parentNode.leftChildNode == parentNode:
-                        node.parentNode.leftChildNode = node
-                    else:
-                        node.parentNode.rightChildNode = node
-
-                parentIndex = ceil(node.index / 2) - 1
-                parentNode = node.parentNode
+                node.parentNode.rightChildNode = node
+            self._swapUp(node)
 
     def deleteNodeByOrder(self, order: float):
         deleteNode = self.getNodeByOrder(order)
@@ -172,6 +213,7 @@ class TSBinaryHeap:
                         node.leftChildNode.parentNode = node
 
                 node.parentNode = deleteNode.parentNode
+
                 if node.parentNode:
                     if node.parentNode.leftChildNode == deleteNode:
                         node.parentNode.leftChildNode = node
@@ -207,85 +249,9 @@ class TSBinaryHeap:
             self.heapList.pop()
 
             if node.parentNode and self._compare(node.order, node.parentNode.order):
-                parentIndex = ceil(node.index / 2) - 1
-                parentNode = self.heapList[parentIndex]
-                while node.index > 0 and self._compare(node.order, parentNode.order):
-                    self.heapList[parentIndex], self.heapList[node.index] = \
-                        self.heapList[node.index], self.heapList[parentIndex]
-
-                    parentNode.index, node.index = node.index, parentNode.index
-
-                    if parentNode.leftChildNode == node:
-                        node.rightChildNode, parentNode.rightChildNode = parentNode.rightChildNode, node.rightChildNode
-                        parentNode.leftChildNode = node.leftChildNode
-                        node.leftChildNode = parentNode
-                        if node.rightChildNode:
-                            node.rightChildNode.parentNode = node
-                        if parentNode.rightChildNode:
-                            parentNode.rightChildNode.parentNode = parentNode
-                        if parentNode.leftChildNode:
-                            parentNode.leftChildNode.parentNode = parentNode
-                    else:
-                        node.leftChildNode, parentNode.leftChildNode = parentNode.leftChildNode, node.leftChildNode
-                        parentNode.rightChildNode = node.rightChildNode
-                        node.rightChildNode = parentNode
-                        if node.leftChildNode:
-                            node.leftChildNode.parentNode = node
-                        if parentNode.leftChildNode:
-                            parentNode.leftChildNode.parentNode = parentNode
-                        if parentNode.rightChildNode:
-                            parentNode.rightChildNode.parentNode = parentNode
-
-                    node.parentNode = parentNode.parentNode
-                    parentNode.parentNode = node
-
-                    if node.parentNode:
-                        if node.parentNode.leftChildNode == parentNode:
-                            node.parentNode.leftChildNode = node
-                        else:
-                            node.parentNode.rightChildNode = node
-
-                    parentIndex = ceil(node.index / 2) - 1
-                    parentNode = node.parentNode
+                self._swapUp(node)
             else:
-                childNode = self._getSwapChild(node)
-                while childNode:
-                    self.heapList[childNode.index], self.heapList[node.index] = \
-                        self.heapList[node.index], self.heapList[childNode.index]
-
-                    childNode.index, node.index = node.index, childNode.index
-
-                    if node.leftChildNode == childNode:
-                        childNode.rightChildNode, node.rightChildNode = node.rightChildNode, childNode.rightChildNode
-                        node.leftChildNode = childNode.leftChildNode
-                        childNode.leftChildNode = node
-                        if childNode.rightChildNode:
-                            childNode.rightChildNode.parentNode = childNode
-                        if node.rightChildNode:
-                            node.rightChildNode.parentNode = node
-                        if node.leftChildNode:
-                            node.leftChildNode.parentNode = node
-                    else:
-                        childNode.leftChildNode, node.leftChildNode = node.leftChildNode, childNode.leftChildNode
-                        node.rightChildNode = childNode.rightChildNode
-                        childNode.rightChildNode = node
-                        if childNode.leftChildNode:
-                            childNode.leftChildNode.parentNode = childNode
-                        if node.leftChildNode:
-                            node.leftChildNode.parentNode = node
-                        if node.rightChildNode:
-                            node.rightChildNode.parentNode = node
-
-                    childNode.parentNode = node.parentNode
-                    node.parentNode = childNode
-
-                    if childNode.parentNode:
-                        if childNode.parentNode.leftChildNode == node:
-                            childNode.parentNode.leftChildNode = childNode
-                        else:
-                            childNode.parentNode.rightChildNode = childNode
-
-                    childNode = self._getSwapChild(node)
+                self._swapDown(node)
 
     def getNodeByOrder(self, order: float) -> Union[TSBinaryHeapNode, None]:
         return self.heapDict.get(order, [None])[0]
