@@ -6,7 +6,7 @@ from math import ceil, floor, log2
 
 
 class TSBinaryHeap:
-    def __init__(self, node: Union[TSBinaryHeapNode, None] = None, heapStruct: str=TSConstants.BinaryHeap.min):
+    def __init__(self, node: Union[TSBinaryHeapNode, None] = None, heapStruct: str = TSConstants.BinaryHeap.min):
         self.heapStruct = heapStruct
         self.heapList: Deque[TSBinaryHeapNode] = deque()
         self.heapDict = {}
@@ -336,6 +336,6 @@ class TSBinaryHeap:
             self.heapStruct = TSConstants.BinaryHeap.min
         elif self.heapStruct == TSConstants.BinaryHeap.min:
             self.heapStruct = TSConstants.BinaryHeap.max
-        for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
-            self._swapDown(self.heapList[index])
-
+        if len(self.heapList) > 1:
+            for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
+                self._swapDown(self.heapList[index])
