@@ -339,3 +339,31 @@ class TSBinaryHeap:
         if len(self.heapList) > 1:
             for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
                 self._swapDown(self.heapList[index])
+
+    def mergeWithOtherTree(self, tree: 'TSBinaryHeap'):
+        if len(self.heapList) >= len(tree.heapList):
+            # Merge dict
+            for key in tree.heapDict.keys():
+                if key in self.heapDict:
+                    self.heapDict[key] += tree.heapDict[key]
+                else:
+                    self.heapDict[key] = tree.heapDict[key]
+            tree.heapDict = self.heapDict
+            # Merge list
+            for node in tree.heapList:
+                self.heapList.append(node)
+                node.index = len(self.heapList) - 1
+                parentNode = self.heapList[ceil(node.index / 2) - 1]
+                if parentNode.leftChildNode:
+                    parentNode.rightChildNode = node
+                else:
+                    parentNode.leftChildNode = node
+                node.parentNode = parentNode
+                node.leftChildNode = None
+                node.rightChildNode = None
+            if len(self.heapList) > 1:
+                for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
+                    self._swapDown(self.heapList[index])
+            tree.heapList = self.heapList
+        else:
+            tree.mergeWithOtherTree(self)
