@@ -265,6 +265,17 @@ class TSBinaryHeap:
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
 
+    def getRankByOrder(self, order: float) -> int:
+        node = self.getNodeByOrder(order)
+        if node:
+            smallerNodeCount = 0
+            for n in self.heapList:
+                if n.order < node.order:
+                    smallerNodeCount += 1
+            return smallerNodeCount
+        else:
+            return -1
+
     def deleteMaxOrderNode(self):
         if self.heapList:
             if self.heapStruct == TSConstants.BinaryHeap.max:
@@ -365,5 +376,6 @@ class TSBinaryHeap:
                 for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
                     self._swapDown(self.heapList[index])
             tree.heapList = self.heapList
+            tree.heapStruct = self.heapStruct
         else:
             tree.mergeWithOtherTree(self)
