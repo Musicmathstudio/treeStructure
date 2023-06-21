@@ -265,7 +265,7 @@ class TSBinarySearchTree:
             leftCount = self._getTreeNodeCount(node.leftChildNode)
             if leftCount == rank:
                 return node
-            elif leftCount - 1 < rank:
+            elif leftCount < rank:
                 rank = rank - leftCount - 1
                 node = node.rightChildNode
             else:
