@@ -3,6 +3,7 @@ from .tsConstants import TSConstants
 from typing import Union, Deque
 from collections import deque
 from math import ceil, floor, log2
+import random
 
 
 class TSBinaryHeap:
@@ -275,6 +276,34 @@ class TSBinaryHeap:
             return smallerNodeCount
         else:
             return -1
+
+    def getNodeByRank(self, rank: int) -> Union[TSBinaryHeapNode, None]:
+        if rank < 0 or rank > len(self.heapList):
+            return None
+        return self._getNodeByRank(list(self.heapList), rank)
+
+    def _getNodeByRank(self, array: List[TSBinaryHeapNode], rank: int) -> Union[TSBinaryHeapNode, None]:
+        if not array:
+            return None
+        pivotNode = random.choice(array)
+        smallerNode = []
+        equalNode = []
+        biggerNode = []
+        for node in array:
+            if pivotNode.order > node.order:
+                smallerNode.append(node)
+            elif pivotNode.order == node.order:
+                equalNode.append(node)
+            else:
+                biggerNode.append(node)
+        lenOfSmallerNode = len(smallerNode)
+        lenOfEqualNode = len(equalNode)
+        if rank < lenOfSmallerNode:
+            return self._getNodeByRank(smallerNode, rank)
+        elif rank >= lenOfSmallerNode + lenOfEqualNode:
+            return self._getNodeByRank(biggerNode, rank - lenOfSmallerNode - lenOfEqualNode)
+        else:
+            return equalNode[0]
 
     def deleteMaxOrderNode(self):
         if self.heapList:
