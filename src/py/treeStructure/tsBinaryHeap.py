@@ -1,6 +1,6 @@
 from .tsBinaryHeapNode import TSBinaryHeapNode
 from .tsConstants import TSConstants
-from typing import Union, Deque
+from typing import Union, Deque, List
 from collections import deque
 from math import ceil, floor, log2
 import random
@@ -265,6 +265,57 @@ class TSBinaryHeap:
 
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
+
+    def getOrderedList(self) -> List[TSBinaryHeapNode]:
+        returnList: Deque[TSBinaryHeapNode] = deque()
+        length = len(self.heapList)
+        if self.heapStruct == TSConstants.BinaryHeap.max:
+            for n in self.heapList:
+                returnList.append(n)
+            for i in range(length - 1):
+                # Swap max and last element in tree
+                returnList[0], returnList[length - i - 1] = returnList[length - i - 1], returnList[0]
+                currentIdx = 0
+                while currentIdx * 2 + 1 <= length - i - 2:
+                    #  Check right child exist
+                    if currentIdx * 2 + 2 <= length - i - 2:
+                        if returnList[currentIdx * 2 + 1].order >= returnList[currentIdx * 2 + 2].order:
+                            maxChildNodeIdx = currentIdx * 2 + 1
+                        else:
+                            maxChildNodeIdx = currentIdx * 2 + 2
+                    else:
+                        maxChildNodeIdx = currentIdx * 2 + 1
+                    # No need to swap if current is greater than children
+                    if returnList[maxChildNodeIdx].order <= returnList[currentIdx].order:
+                        break
+                    else:
+                        returnList[maxChildNodeIdx], returnList[currentIdx] = returnList[currentIdx], returnList[
+                            maxChildNodeIdx]
+                        currentIdx = maxChildNodeIdx
+        else:
+            for n in self.heapList:
+                returnList.appendleft(n)
+            for i in range(length - 1):
+                # Swap min and first element in tree
+                returnList[-1], returnList[i] = returnList[i], returnList[-1]
+                currentIdx = length - 1
+                while currentIdx * 2 - length >= i + 1:
+                    #  Check right child exist
+                    if currentIdx * 2 - length - 1 >= i + 1:
+                        if returnList[currentIdx * 2 - length].order <= returnList[currentIdx * 2 - length - 1].order:
+                            minChildNodeIdx = currentIdx * 2 - length
+                        else:
+                            minChildNodeIdx = currentIdx * 2 - length - 1
+                    else:
+                        minChildNodeIdx = currentIdx * 2 - length
+                    # No need to swap if current is smaller than children
+                    if returnList[minChildNodeIdx].order >= returnList[currentIdx].order:
+                        break
+                    else:
+                        returnList[minChildNodeIdx], returnList[currentIdx] = returnList[currentIdx], returnList[
+                            minChildNodeIdx]
+                        currentIdx = minChildNodeIdx
+        return list(returnList)
 
     def getRankByOrder(self, order: float) -> int:
         node = self.getNodeByOrder(order)
