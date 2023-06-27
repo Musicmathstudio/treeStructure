@@ -208,7 +208,7 @@ class TSBinarySearchTree:
                     size += 1
         return count
 
-    def getOrderedList(self) -> List[TSBinaryNode]:
+    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryNode, float]]:
         orderedList = []
         if not self.rootNode:
             return orderedList
@@ -222,11 +222,15 @@ class TSBinarySearchTree:
                 node = node.leftChildNode
             node = stk.pop();
             size -= 1
-            orderedList.append(node);
-            node = node.rightChildNode;
+            if onlyOrder:
+                orderedList.append(node.order);
+            else:
+                orderedList.append(node)
+            node = node.rightChildNode
         return orderedList
 
-    def _getOrderedList(self, rootNode: Union[TSBinaryNode, None]) -> List[TSBinaryNode]:
+    def _getOrderedList(self, rootNode: Union[TSBinaryNode, None], onlyOrder: bool = False) -> List[
+        Union[TSBinaryNode, float]]:
         orderedList = []
         if not rootNode:
             return orderedList
@@ -240,7 +244,10 @@ class TSBinarySearchTree:
                 node = node.leftChildNode
             node = stk.pop();
             size -= 1
-            orderedList.append(node);
+            if onlyOrder:
+                orderedList.append(node.order);
+            else:
+                orderedList.append(node)
             node = node.rightChildNode;
         return orderedList
 

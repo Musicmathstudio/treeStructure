@@ -266,8 +266,8 @@ class TSBinaryHeap:
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
 
-    def getOrderedList(self) -> List[TSBinaryHeapNode]:
-        returnList: Deque[TSBinaryHeapNode] = deque()
+    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryHeapNode, float]]:
+        returnList: Deque[Union[TSBinaryHeapNode, float]] = deque()
         length = len(self.heapList)
         if self.heapStruct == TSConstants.BinaryHeap.max:
             for n in self.heapList:
@@ -275,6 +275,8 @@ class TSBinaryHeap:
             for i in range(length - 1):
                 # Swap max and last element in tree
                 returnList[0], returnList[length - i - 1] = returnList[length - i - 1], returnList[0]
+                if onlyOrder:
+                    returnList[length - i - 1] = returnList[length - i - 1].order
                 currentIdx = 0
                 while currentIdx * 2 + 1 <= length - i - 2:
                     #  Check right child exist
@@ -298,6 +300,8 @@ class TSBinaryHeap:
             for i in range(length - 1):
                 # Swap min and first element in tree
                 returnList[-1], returnList[i] = returnList[i], returnList[-1]
+                if onlyOrder:
+                    returnList[i] = returnList[i].order
                 currentIdx = length - 1
                 while currentIdx * 2 - length >= i + 1:
                     #  Check right child exist
