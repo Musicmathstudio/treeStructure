@@ -78,6 +78,7 @@ class TSBinarySearchTree:
                                 self.rootNode = maxNodeInLeft
                             maxNodeInLeft.parentNode = iterNode.parentNode
                             maxNodeInLeft.rightChildNode = iterNode.rightChildNode
+                            iterNode.rightChildNode.parentNode = maxNodeInLeft
                         else:
                             while maxNodeInLeft:
                                 if maxNodeInLeft.rightChildNode:
@@ -99,11 +100,13 @@ class TSBinarySearchTree:
                             maxNodeInLeft.parentNode = iterNode.parentNode
                             maxNodeInLeft.leftChildNode = iterNode.leftChildNode
                             maxNodeInLeft.rightChildNode = iterNode.rightChildNode
+                            iterNode.leftChildNode.parentNode = maxNodeInLeft
+                            iterNode.rightChildNode.parentNode = maxNodeInLeft
                     iterNode.leftChildNode = None
                     iterNode.rightChildNode = None
                     iterNode.parentNode = None
                     break
-                elif iterNode.order >= order:
+                elif iterNode.order > order:
                     if iterNode.leftChildNode:
                         iterNode = iterNode.leftChildNode
                     else:
