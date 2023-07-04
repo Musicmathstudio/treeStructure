@@ -5,8 +5,8 @@ from .tsConstants import TSConstants
 
 class TSBinaryNode:
 
-    def __init__(self, order: float = time.time(), value=None):
-        self.order: float = float(order)
+    def __init__(self, order: Union[float, int] = time.time(), value=None):
+        self.order: Union[float, int] = order
         self.value = value
         self.leftChildNode: Union[TSBinaryNode, None] = None
         self.rightChildNode: Union[TSBinaryNode, None] = None
