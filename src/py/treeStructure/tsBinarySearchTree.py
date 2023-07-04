@@ -33,7 +33,7 @@ class TSBinarySearchTree:
                         iterNode.rightChildNode.parentNode = iterNode
                         break
 
-    def deleteNodeByOrder(self, order: float):
+    def deleteNodeByOrder(self, order: Union[float, int]):
         if not self.rootNode:
             return
         else:
@@ -114,7 +114,7 @@ class TSBinarySearchTree:
                     else:
                         break
 
-    def getNodeByOrder(self, order: float) -> Union[TSBinaryNode, None]:
+    def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -208,7 +208,7 @@ class TSBinarySearchTree:
                     size += 1
         return count
 
-    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryNode, float]]:
+    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryNode, float, int]]:
         orderedList = []
         if not self.rootNode:
             return orderedList
@@ -230,7 +230,7 @@ class TSBinarySearchTree:
         return orderedList
 
     def _getOrderedList(self, rootNode: Union[TSBinaryNode, None], onlyOrder: bool = False) -> List[
-        Union[TSBinaryNode, float]]:
+        Union[TSBinaryNode, float, int]]:
         orderedList = []
         if not rootNode:
             return orderedList
@@ -251,7 +251,7 @@ class TSBinarySearchTree:
             node = node.rightChildNode;
         return orderedList
 
-    def getRankByOrder(self, order: float) -> int:
+    def getRankByOrder(self, order: Union[float, int]) -> int:
         node = self.getNodeByOrder(order)
         if not node:
             return -1

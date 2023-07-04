@@ -23,13 +23,13 @@ class TSBinaryHeap:
         else:
             self.heapDict[node.order] = deque([node])
 
-    def _deleteNodeInDictByOrder(self, order: float):
+    def _deleteNodeInDictByOrder(self, order: Union[float, int]):
         if order in self.heapDict:
             self.heapDict[order].popleft()
             if not len(self.heapDict[order]):
                 del self.heapDict[order]
 
-    def _compare(self, x: float, y: float) -> bool:
+    def _compare(self, x: Union[float, int], y: Union[float, int]) -> bool:
         if self.heapStruct == TSConstants.BinaryHeap.min:
             return x < y
         elif self.heapStruct == TSConstants.BinaryHeap.max:
@@ -178,7 +178,7 @@ class TSBinaryHeap:
                 node.parentNode.rightChildNode = node
             self._swapUp(node)
 
-    def deleteNodeByOrder(self, order: float):
+    def deleteNodeByOrder(self, order: Union[float, int]):
         deleteNode = self.getNodeByOrder(order)
         if deleteNode:
             self._deleteNodeInDictByOrder(order)
@@ -254,7 +254,7 @@ class TSBinaryHeap:
             else:
                 self._swapDown(node)
 
-    def getNodeByOrder(self, order: float) -> Union[TSBinaryHeapNode, None]:
+    def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
         return self.heapDict.get(order, [None])[0]
 
     def getTreeHeight(self) -> int:
@@ -266,8 +266,8 @@ class TSBinaryHeap:
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
 
-    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryHeapNode, float]]:
-        returnList: Deque[Union[TSBinaryHeapNode, float]] = deque()
+    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryHeapNode, float, int]]:
+        returnList: Deque[Union[TSBinaryHeapNode, float, int]] = deque()
         length = len(self.heapList)
         if self.heapStruct == TSConstants.BinaryHeap.max:
             for n in self.heapList:
@@ -321,7 +321,7 @@ class TSBinaryHeap:
                         currentIdx = minChildNodeIdx
         return list(returnList)
 
-    def getRankByOrder(self, order: float) -> int:
+    def getRankByOrder(self, order: Union[float, int]) -> int:
         node = self.getNodeByOrder(order)
         if node:
             smallerNodeCount = 0
