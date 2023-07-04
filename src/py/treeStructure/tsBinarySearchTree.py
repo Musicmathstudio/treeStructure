@@ -18,7 +18,7 @@ class TSBinarySearchTree:
         else:
             iterNode = self.rootNode
             while iterNode:
-                if iterNode.order >= node.order:
+                if iterNode.order > node.order:
                     if iterNode.leftChildNode:
                         iterNode = iterNode.leftChildNode
                     else:
@@ -124,8 +124,13 @@ class TSBinarySearchTree:
             iterNode = self.rootNode
             while iterNode:
                 if iterNode.order == order:
+                    while iterNode.leftChildNode:
+                        if iterNode.leftChildNode.order == order:
+                            iterNode = iterNode.leftChildNode
+                        else:
+                            break
                     return iterNode
-                elif iterNode.order >= order:
+                elif iterNode.order > order:
                     iterNode = iterNode.leftChildNode
                 else:
                     iterNode = iterNode.rightChildNode
