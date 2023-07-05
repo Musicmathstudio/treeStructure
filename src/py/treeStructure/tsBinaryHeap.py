@@ -3,6 +3,7 @@ from .tsConstants import TSConstants
 from typing import Union, Deque, List
 from collections import deque
 from math import ceil, floor, log2
+from itertools import islice
 import random
 
 
@@ -294,6 +295,8 @@ class TSBinaryHeap:
                         returnList[maxChildNodeIdx], returnList[currentIdx] = returnList[currentIdx], returnList[
                             maxChildNodeIdx]
                         currentIdx = maxChildNodeIdx
+            if onlyOrder:
+                returnList[0] = returnList[0].order
         else:
             for n in self.heapList:
                 returnList.appendleft(n)
@@ -319,6 +322,8 @@ class TSBinaryHeap:
                         returnList[minChildNodeIdx], returnList[currentIdx] = returnList[currentIdx], returnList[
                             minChildNodeIdx]
                         currentIdx = minChildNodeIdx
+            if onlyOrder:
+                returnList[-1] = returnList[-1].order
         return list(returnList)
 
     def getRankByOrder(self, order: Union[float, int]) -> int:
@@ -383,7 +388,7 @@ class TSBinaryHeap:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.min:
-                return max(self.heapList[floor(len(self.heapList) / 2):], key=lambda node: node.order)
+                return max(islice(self.heapList, floor(len(self.heapList) / 2), None), key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.max:
                 return self.heapList[0]
 
@@ -392,7 +397,7 @@ class TSBinaryHeap:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.max:
-                return min(self.heapList[floor(len(self.heapList) / 2):], key=lambda node: node.order)
+                return min(islice(self.heapList, floor(len(self.heapList) / 2), None), key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.min:
                 return self.heapList[0]
 
