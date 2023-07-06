@@ -340,15 +340,15 @@ class TSBinaryHeap:
     def getNodeByRank(self, rank: int) -> Union[TSBinaryHeapNode, None]:
         if rank < 0 or rank > len(self.heapList):
             return None
-        return self._getNodeByRank(list(self.heapList), rank)
+        return self._getNodeByRank(self.heapList, rank)
 
-    def _getNodeByRank(self, array: List[TSBinaryHeapNode], rank: int) -> Union[TSBinaryHeapNode, None]:
+    def _getNodeByRank(self, array: Deque[TSBinaryHeapNode], rank: int) -> Union[TSBinaryHeapNode, None]:
         if not array:
             return None
         pivotNode = random.choice(array)
-        smallerNode = []
-        equalNode = []
-        biggerNode = []
+        smallerNode = deque()
+        equalNode = deque()
+        biggerNode = deque()
         for node in array:
             if pivotNode.order > node.order:
                 smallerNode.append(node)
@@ -388,7 +388,7 @@ class TSBinaryHeap:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.min:
-                return max(islice(self.heapList, floor(len(self.heapList) / 2), None), key=lambda node: node.order)
+                return max(islice(self.heapList, len(self.heapList) // 2, None), key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.max:
                 return self.heapList[0]
 
@@ -397,7 +397,7 @@ class TSBinaryHeap:
             return None
         else:
             if self.heapStruct == TSConstants.BinaryHeap.max:
-                return min(islice(self.heapList, floor(len(self.heapList) / 2), None), key=lambda node: node.order)
+                return min(islice(self.heapList, len(self.heapList) // 2, None), key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.min:
                 return self.heapList[0]
 
@@ -437,7 +437,7 @@ class TSBinaryHeap:
         elif self.heapStruct == TSConstants.BinaryHeap.min:
             self.heapStruct = TSConstants.BinaryHeap.max
         if len(self.heapList) > 1:
-            for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
+            for index in range(len(self.heapList) // 2 - 1, -1, -1):
                 self._swapDown(self.heapList[index])
 
     def mergeWithOtherTree(self, tree: 'TSBinaryHeap'):
@@ -462,7 +462,7 @@ class TSBinaryHeap:
                 node.leftChildNode = None
                 node.rightChildNode = None
             if len(self.heapList) > 1:
-                for index in range(floor(len(self.heapList) / 2) - 1, -1, -1):
+                for index in range(len(self.heapList) // 2 - 1, -1, -1):
                     self._swapDown(self.heapList[index])
             tree.heapList = self.heapList
             tree.heapStruct = self.heapStruct
