@@ -2,7 +2,6 @@ from .tsBinaryHeapNode import TSBinaryHeapNode
 from .tsConstants import TSConstants
 from typing import Union, Deque, List
 from collections import deque
-from math import log2
 from itertools import islice
 import random
 
@@ -262,7 +261,7 @@ class TSBinaryHeap:
         nodeCount = len(self.heapList)
         if not nodeCount:
             return -1
-        return int(log2(nodeCount))
+        return len(bin(nodeCount)[2:]) - 1
 
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
