@@ -2,7 +2,7 @@ from .tsBinaryHeapNode import TSBinaryHeapNode
 from .tsConstants import TSConstants
 from typing import Union, Deque, List
 from collections import deque
-from math import ceil, floor, log2
+from math import log2
 from itertools import islice
 import random
 
@@ -172,7 +172,7 @@ class TSBinaryHeap:
         if not node.index:
             node.parentNode = None
         else:
-            node.parentNode = self.heapList[ceil(node.index / 2) - 1]
+            node.parentNode = self.heapList[-(node.index // -2) - 1]
             if node.index % 2:
                 node.parentNode.leftChildNode = node
             else:
@@ -197,7 +197,7 @@ class TSBinaryHeap:
                 deleteNode.index = -1
                 self.heapList.pop()
                 return
-            elif deleteNode.index == ceil(node.index / 2) - 1:
+            elif deleteNode.index == -(node.index // -2) - 1:
                 self.heapList[deleteNode.index], self.heapList[node.index] = \
                     self.heapList[node.index], self.heapList[deleteNode.index]
 
@@ -262,7 +262,7 @@ class TSBinaryHeap:
         nodeCount = len(self.heapList)
         if not nodeCount:
             return -1
-        return floor(log2(nodeCount))
+        return int(log2(nodeCount))
 
     def getTreeNodeCount(self) -> int:
         return len(self.heapList)
@@ -453,7 +453,7 @@ class TSBinaryHeap:
             for node in tree.heapList:
                 self.heapList.append(node)
                 node.index = len(self.heapList) - 1
-                parentNode = self.heapList[ceil(node.index / 2) - 1]
+                parentNode = self.heapList[-(node.index // -2) - 1]
                 if parentNode.leftChildNode:
                     parentNode.rightChildNode = node
                 else:
