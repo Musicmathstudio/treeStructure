@@ -3,7 +3,7 @@ from .tsConstants import TSConstants
 from typing import Union, Deque, List
 from collections import deque
 from itertools import islice
-import random
+from random import choice
 
 
 class TSBinaryHeap:
@@ -163,37 +163,6 @@ class TSBinaryHeap:
                     childNode.parentNode.rightChildNode = childNode
 
             childNode = self._getSwapChild(node)
-
-    def _sort(self, array: List[TSBinaryHeapNode]) -> List[TSBinaryHeapNode]:
-        if len(array) == 1:
-            return array
-        left = self._sort(array[:len(array) // 2])
-        right = self._sort(array[len(array) // 2:])
-        orderedList = []
-        while left and right:
-            if left[0].order >= right[0].order:
-                orderedList.append(right[0])
-                del right[0]
-            else:
-                orderedList.append(left[0])
-                del left[0]
-        if left:
-            orderedList = orderedList + left
-        elif right:
-            orderedList = orderedList + right
-        return orderedList
-
-    def _median(self, array: Deque[TSBinaryHeapNode]) -> TSBinaryHeapNode:
-        medianQueue = list(array)
-        while len(medianQueue) > 5:
-            temp = []
-            for i in range(-(len(medianQueue) // -5)):
-                if (i + 1) * 5 > len(medianQueue):
-                    temp.append(self._sort(medianQueue[i * 5:])[len(medianQueue) % 5 // 2])
-                else:
-                    temp.append(self._sort(medianQueue[i * 5:(i + 1) * 5])[2])
-            medianQueue = temp
-        return self._sort(medianQueue)[len(medianQueue) // 2]
 
     def insertNode(self, node: TSBinaryHeapNode):
         self.heapList.append(node)
@@ -375,7 +344,7 @@ class TSBinaryHeap:
     def _getNodeByRank(self, array: Deque[TSBinaryHeapNode], rank: int) -> Union[TSBinaryHeapNode, None]:
         if not array:
             return None
-        pivotNode = self._median(array)
+        pivotNode = choice(array)
         smallerNode = deque()
         equalNode = deque()
         biggerNode = deque()
