@@ -12,10 +12,15 @@ class TSBinaryHeap:
         self.heapList: Deque[TSBinaryHeapNode] = deque()
         self.heapDict = {}
         if node:
+            self._checkNodeConnection(node)
             self.heapList.append(node)
             self.heapDict[node.order] = deque([node])
-            node.parentNode = None
             node.index = 0
+
+    def _checkNodeConnection(self, node: Union[TSBinaryHeapNode, None] = None):
+        if node:
+            if node.parentNode or node.leftChildNode or node.rightChildNode:
+                raise Exception('Node is already in other tree')
 
     def _appendNodeIntoDict(self, node: TSBinaryHeapNode):
         if node.order in self.heapDict:
@@ -164,21 +169,21 @@ class TSBinaryHeap:
 
             childNode = self._getSwapChild(node)
 
-    def insertNode(self, node: TSBinaryHeapNode):
+    def insertNode(self, node: TSBinaryHeapNode) -> TSBinaryHeapNode:
+        self._checkNodeConnection(node)
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
         node.index = len(self.heapList) - 1
-        if not node.index:
-            node.parentNode = None
-        else:
+        if node.index:
             node.parentNode = self.heapList[-(node.index // -2) - 1]
             if node.index % 2:
                 node.parentNode.leftChildNode = node
             else:
                 node.parentNode.rightChildNode = node
             self._swapUp(node)
+        return node
 
-    def deleteNodeByOrder(self, order: Union[float, int]):
+    def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
         deleteNode = self.getNodeByOrder(order)
         if deleteNode:
             self._deleteNodeInDictByOrder(order)
@@ -186,7 +191,7 @@ class TSBinaryHeap:
             if len(self.heapList) == 1:
                 deleteNode.index = -1
                 self.heapList.pop()
-                return
+                return deleteNode
             elif node == deleteNode:
                 if deleteNode.parentNode.rightChildNode == deleteNode:
                     deleteNode.parentNode.rightChildNode = None
@@ -195,7 +200,7 @@ class TSBinaryHeap:
                 deleteNode.parentNode = None
                 deleteNode.index = -1
                 self.heapList.pop()
-                return
+                return deleteNode
             elif deleteNode.index == -(node.index // -2) - 1:
                 self.heapList[deleteNode.index], self.heapList[node.index] = \
                     self.heapList[node.index], self.heapList[deleteNode.index]
@@ -253,6 +258,7 @@ class TSBinaryHeap:
                 self._swapUp(node)
             else:
                 self._swapDown(node)
+        return deleteNode
 
     def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
         return self.heapDict.get(order, [None])[0]

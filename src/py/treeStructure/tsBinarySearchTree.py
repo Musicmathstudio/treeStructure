@@ -7,14 +7,18 @@ from collections import deque
 class TSBinarySearchTree:
 
     def __init__(self, node: Union[TSBinaryNode, None] = None):
+        self._checkNodeConnection(node)
         self.rootNode: Union[TSBinaryNode, None] = node
-        if self.rootNode:
-            self.rootNode.parentNode = None
 
-    def insertNode(self, node: TSBinaryNode):
+    def _checkNodeConnection(self, node: Union[TSBinaryNode, None] = None):
+        if node:
+            if node.parentNode or node.leftChildNode or node.rightChildNode:
+                raise Exception('Node is already in other tree')
+
+    def insertNode(self, node: TSBinaryNode) -> TSBinaryNode:
+        self._checkNodeConnection(node)
         if not self.rootNode:
             self.rootNode = node
-            self.rootNode.parentNode = None
         else:
             iterNode = self.rootNode
             while iterNode:
@@ -32,10 +36,11 @@ class TSBinarySearchTree:
                         iterNode.rightChildNode = node
                         iterNode.rightChildNode.parentNode = iterNode
                         break
+        return node
 
-    def deleteNodeByOrder(self, order: Union[float, int]):
+    def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
-            return
+            return None
         else:
             iterNode = self.rootNode
             while iterNode:
@@ -105,17 +110,17 @@ class TSBinarySearchTree:
                     iterNode.leftChildNode = None
                     iterNode.rightChildNode = None
                     iterNode.parentNode = None
-                    break
+                    return iterNode
                 elif iterNode.order > order:
                     if iterNode.leftChildNode:
                         iterNode = iterNode.leftChildNode
                     else:
-                        break
+                        return None
                 else:
                     if iterNode.rightChildNode:
                         iterNode = iterNode.rightChildNode
                     else:
-                        break
+                        return None
 
     def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
@@ -309,7 +314,7 @@ class TSBinarySearchTree:
                 else:
                     return iterNode
 
-    def deleteMaxOrderNode(self):
+    def deleteMaxOrderNode(self) -> Union[TSBinaryNode, None]:
         node = self.getMaxOrderNode()
         if node:
             if node.parentNode:
@@ -320,8 +325,9 @@ class TSBinarySearchTree:
                 node.leftChildNode.parentNode = node.parentNode
             node.leftChildNode = None
             node.parentNode = None
+        return node
 
-    def deleteMinOrderNode(self):
+    def deleteMinOrderNode(self) -> Union[TSBinaryNode, None]:
         node = self.getMinOrderNode()
         if node:
             if node.parentNode:
@@ -332,6 +338,7 @@ class TSBinarySearchTree:
                 node.rightChildNode.parentNode = node.parentNode
             node.rightChildNode = None
             node.parentNode = None
+        return node
 
     def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
         return self._beautifulPrint(self.rootNode, onlyOrder)

@@ -1,11 +1,11 @@
-import time
+from time import time
 from typing import Union
 from .tsConstants import TSConstants
 
 
 class TSBinaryNode:
 
-    def __init__(self, order: Union[float, int] = time.time(), value=None):
+    def __init__(self, order: Union[float, int] = time(), value=None):
         self.order: Union[float, int] = order
         self.value = value
         self.leftChildNode: Union[TSBinaryNode, None] = None
