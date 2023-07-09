@@ -169,7 +169,7 @@ class TSBinaryHeap:
 
             childNode = self._getSwapChild(node)
 
-    def insertNode(self, node: TSBinaryHeapNode) -> TSBinaryHeapNode:
+    def insertNode(self, node: TSBinaryHeapNode):
         self._checkNodeConnection(node)
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
@@ -181,7 +181,6 @@ class TSBinaryHeap:
             else:
                 node.parentNode.rightChildNode = node
             self._swapUp(node)
-        return node
 
     def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
         deleteNode = self.getNodeByOrder(order)

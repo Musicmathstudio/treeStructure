@@ -15,7 +15,7 @@ class TSBinarySearchTree:
             if node.parentNode or node.leftChildNode or node.rightChildNode:
                 raise Exception('Node is already in other tree')
 
-    def insertNode(self, node: TSBinaryNode) -> TSBinaryNode:
+    def insertNode(self, node: TSBinaryNode):
         self._checkNodeConnection(node)
         if not self.rootNode:
             self.rootNode = node
@@ -36,7 +36,6 @@ class TSBinarySearchTree:
                         iterNode.rightChildNode = node
                         iterNode.rightChildNode.parentNode = iterNode
                         break
-        return node
 
     def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
         if not self.rootNode:
