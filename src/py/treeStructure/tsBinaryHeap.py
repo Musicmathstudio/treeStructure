@@ -472,3 +472,11 @@ class TSBinaryHeap:
             tree.heapStruct = self.heapStruct
         else:
             tree.mergeWithOtherTree(self)
+
+    def clear(self):
+        for node in self.heapList:
+            node.parentNode = None
+            node.leftChildNode = None
+            node.rightChildNode = None
+        self.heapDict.clear()
+        self.heapList.clear()
