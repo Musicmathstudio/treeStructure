@@ -369,24 +369,6 @@ class TSBinaryHeap:
         else:
             return equalNode[0]
 
-    def deleteMaxOrderNode(self):
-        if self.heapList:
-            if self.heapStruct == TSConstants.BinaryHeap.max:
-                self.deleteNodeByOrder(self.heapList[0].order)
-            elif self.heapStruct == TSConstants.BinaryHeap.min:
-                maxNode = self.getMaxOrderNode()
-                if maxNode:
-                    self.deleteNodeByOrder(maxNode.order)
-
-    def deleteMinOrderNode(self):
-        if self.heapList:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
-                self.deleteNodeByOrder(self.heapList[0].order)
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
-                minNode = self.getMinOrderNode()
-                if minNode:
-                    self.deleteNodeByOrder(minNode.order)
-
     def getMaxOrderNode(self) -> Union[TSBinaryHeapNode, None]:
         if not self.heapList:
             return None
@@ -404,6 +386,24 @@ class TSBinaryHeap:
                 return min(islice(self.heapList, len(self.heapList) // 2, None), key=lambda node: node.order)
             elif self.heapStruct == TSConstants.BinaryHeap.min:
                 return self.heapList[0]
+
+    def deleteMaxOrderNode(self):
+        if self.heapList:
+            if self.heapStruct == TSConstants.BinaryHeap.max:
+                self.deleteNodeByOrder(self.heapList[0].order)
+            elif self.heapStruct == TSConstants.BinaryHeap.min:
+                maxNode = self.getMaxOrderNode()
+                if maxNode:
+                    self.deleteNodeByOrder(maxNode.order)
+
+    def deleteMinOrderNode(self):
+        if self.heapList:
+            if self.heapStruct == TSConstants.BinaryHeap.min:
+                self.deleteNodeByOrder(self.heapList[0].order)
+            elif self.heapStruct == TSConstants.BinaryHeap.max:
+                minNode = self.getMinOrderNode()
+                if minNode:
+                    self.deleteNodeByOrder(minNode.order)
 
     def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
         if self.heapList:
@@ -444,7 +444,7 @@ class TSBinaryHeap:
             for index in range(len(self.heapList) // 2 - 1, -1, -1):
                 self._swapDown(self.heapList[index])
 
-    def mergeWithOtherTree(self, tree: 'TSBinaryHeap'):
+    def merge(self, tree: 'TSBinaryHeap'):
         if len(self.heapList) >= len(tree.heapList):
             # Merge dict
             for key in tree.heapDict.keys():
@@ -471,7 +471,7 @@ class TSBinaryHeap:
             tree.heapList = self.heapList
             tree.heapStruct = self.heapStruct
         else:
-            tree.mergeWithOtherTree(self)
+            tree.merge(self)
 
     def clear(self):
         for node in self.heapList:

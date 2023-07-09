@@ -372,7 +372,7 @@ class TSBinarySearchTree:
             rightNode.parentNode = centerNode
             return centerNode
 
-    def mergeWithOtherTree(self, tree: 'TSBinarySearchTree'):
+    def merge(self, tree: 'TSBinarySearchTree'):
         l1 = self.getOrderedList()
         l2 = tree.getOrderedList()
         orderedList = []
