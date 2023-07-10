@@ -1,21 +1,21 @@
-from .tsBinaryNode import TSBinaryNode
+from .binaryNode import BinaryNode
 from typing import Union, List
-from .tsConstants import TSConstants
+from .constants import Constants
 from collections import deque
 
 
-class TSBinarySearchTree:
+class BinarySearchTree:
 
-    def __init__(self, node: Union[TSBinaryNode, None] = None):
+    def __init__(self, node: Union[BinaryNode, None] = None):
         self._checkNodeConnection(node)
-        self.rootNode: Union[TSBinaryNode, None] = node
+        self.rootNode: Union[BinaryNode, None] = node
 
-    def _checkNodeConnection(self, node: Union[TSBinaryNode, None] = None):
+    def _checkNodeConnection(self, node: Union[BinaryNode, None] = None):
         if node:
             if node.parentNode or node.leftChildNode or node.rightChildNode:
                 raise Exception('Node is already in other tree')
 
-    def insertNode(self, node: TSBinaryNode):
+    def insertNode(self, node: BinaryNode):
         self._checkNodeConnection(node)
         if not self.rootNode:
             self.rootNode = node
@@ -37,7 +37,7 @@ class TSBinarySearchTree:
                         iterNode.rightChildNode.parentNode = iterNode
                         break
 
-    def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
+    def deleteNode(self, order: Union[float, int]) -> Union[BinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -121,7 +121,108 @@ class TSBinarySearchTree:
                     else:
                         return None
 
-    def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryNode, None]:
+    def height(self) -> int:
+        height = -1
+        if not self.rootNode:
+            return height
+        q = deque()
+        q.append(self.rootNode)
+        while len(q):
+            height += 1
+            for i in range(len(q)):
+                node = q.popleft()
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+        return height
+
+    def _height(self, rootNode: Union[BinaryNode, None]) -> int:
+        height = -1
+        if not rootNode:
+            return height
+        q = deque()
+        q.append(rootNode)
+        while len(q):
+            height += 1
+            for i in range(len(q)):
+                node = q.popleft()
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+        return height
+
+    def nodeCount(self) -> int:
+        count = 0
+        if not self.rootNode:
+            return count
+        q = deque()
+        q.append(self.rootNode)
+        while len(q):
+            count += len(q)
+            for i in range(len(q)):
+                node = q.popleft()
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+        return count
+
+    def _nodeCount(self, rootNode: Union[BinaryNode, None]) -> int:
+        count = 0
+        if not rootNode:
+            return count
+        q = deque()
+        q.append(rootNode)
+        while len(q):
+            count += len(q)
+            for i in range(len(q)):
+                node = q.popleft()
+                if node.leftChildNode:
+                    q.append(node.leftChildNode)
+                if node.rightChildNode:
+                    q.append(node.rightChildNode)
+        return count
+
+    def orderedList(self, onlyOrder: bool = False) -> List[Union[BinaryNode, float, int]]:
+        orderedList = []
+        if not self.rootNode:
+            return orderedList
+        stk = deque()
+        node = self.rootNode
+        while node or len(stk):
+            while node:
+                stk.append(node)
+                node = node.leftChildNode
+            node = stk.pop();
+            if onlyOrder:
+                orderedList.append(node.order);
+            else:
+                orderedList.append(node)
+            node = node.rightChildNode
+        return orderedList
+
+    def _orderedList(self, rootNode: Union[BinaryNode, None], onlyOrder: bool = False) -> List[
+        Union[BinaryNode, float, int]]:
+        orderedList = []
+        if not rootNode:
+            return orderedList
+        stk = deque()
+        node = rootNode
+        while node or len(stk):
+            while node:
+                stk.append(node)
+                node = node.leftChildNode
+            node = stk.pop();
+            if onlyOrder:
+                orderedList.append(node.order);
+            else:
+                orderedList.append(node)
+            node = node.rightChildNode;
+        return orderedList
+
+    def getNodeByOrder(self, order: Union[float, int]) -> Union[BinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -140,126 +241,25 @@ class TSBinarySearchTree:
                     iterNode = iterNode.rightChildNode
             return None
 
-    def getTreeHeight(self) -> int:
-        height = -1
-        if not self.rootNode:
-            return height
-        q = deque()
-        q.append(self.rootNode)
-        while len(q):
-            height += 1
-            for i in range(len(q)):
-                node = q.popleft()
-                if node.leftChildNode:
-                    q.append(node.leftChildNode)
-                if node.rightChildNode:
-                    q.append(node.rightChildNode)
-        return height
-
-    def _getTreeHeight(self, rootNode: Union[TSBinaryNode, None]) -> int:
-        height = -1
-        if not rootNode:
-            return height
-        q = deque()
-        q.append(rootNode)
-        while len(q):
-            height += 1
-            for i in range(len(q)):
-                node = q.popleft()
-                if node.leftChildNode:
-                    q.append(node.leftChildNode)
-                if node.rightChildNode:
-                    q.append(node.rightChildNode)
-        return height
-
-    def getTreeNodeCount(self) -> int:
-        count = 0
-        if not self.rootNode:
-            return count
-        q = deque()
-        q.append(self.rootNode)
-        while len(q):
-            count += len(q)
-            for i in range(len(q)):
-                node = q.popleft()
-                if node.leftChildNode:
-                    q.append(node.leftChildNode)
-                if node.rightChildNode:
-                    q.append(node.rightChildNode)
-        return count
-
-    def _getTreeNodeCount(self, rootNode: Union[TSBinaryNode, None]) -> int:
-        count = 0
-        if not rootNode:
-            return count
-        q = deque()
-        q.append(rootNode)
-        while len(q):
-            count += len(q)
-            for i in range(len(q)):
-                node = q.popleft()
-                if node.leftChildNode:
-                    q.append(node.leftChildNode)
-                if node.rightChildNode:
-                    q.append(node.rightChildNode)
-        return count
-
-    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryNode, float, int]]:
-        orderedList = []
-        if not self.rootNode:
-            return orderedList
-        stk = deque()
-        node = self.rootNode
-        while node or len(stk):
-            while node:
-                stk.append(node)
-                node = node.leftChildNode
-            node = stk.pop();
-            if onlyOrder:
-                orderedList.append(node.order);
-            else:
-                orderedList.append(node)
-            node = node.rightChildNode
-        return orderedList
-
-    def _getOrderedList(self, rootNode: Union[TSBinaryNode, None], onlyOrder: bool = False) -> List[
-        Union[TSBinaryNode, float, int]]:
-        orderedList = []
-        if not rootNode:
-            return orderedList
-        stk = deque()
-        node = rootNode
-        while node or len(stk):
-            while node:
-                stk.append(node)
-                node = node.leftChildNode
-            node = stk.pop();
-            if onlyOrder:
-                orderedList.append(node.order);
-            else:
-                orderedList.append(node)
-            node = node.rightChildNode;
-        return orderedList
-
     def getRankByOrder(self, order: Union[float, int]) -> int:
         node = self.getNodeByOrder(order)
         if not node:
             return -1
         else:
-            rank = self._getTreeNodeCount(node.leftChildNode) + 1
+            rank = self._nodeCount(node.leftChildNode) + 1
             iterNode = node
             while iterNode.parentNode:
                 if iterNode.parentNode.rightChildNode == iterNode:
-                    rank += self._getTreeNodeCount(iterNode.parentNode.leftChildNode) + 1
+                    rank += self._nodeCount(iterNode.parentNode.leftChildNode) + 1
                 iterNode = iterNode.parentNode
             return rank - 1
 
-    def getNodeByRank(self, rank: int) -> Union[TSBinaryNode, None]:
+    def getNodeByRank(self, rank: int) -> Union[BinaryNode, None]:
         if rank < 0:
             return None
         node = self.rootNode
         while node:
-            leftCount = self._getTreeNodeCount(node.leftChildNode)
+            leftCount = self._nodeCount(node.leftChildNode)
             if leftCount == rank:
                 return node
             elif leftCount < rank:
@@ -269,7 +269,7 @@ class TSBinarySearchTree:
                 node = node.leftChildNode
         return None
 
-    def getMaxOrderNode(self) -> Union[TSBinaryNode, None]:
+    def maxNode(self) -> Union[BinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -280,7 +280,7 @@ class TSBinarySearchTree:
                 else:
                     return iterNode
 
-    def getMinOrderNode(self) -> Union[TSBinaryNode, None]:
+    def minNode(self) -> Union[BinaryNode, None]:
         if not self.rootNode:
             return None
         else:
@@ -291,8 +291,8 @@ class TSBinarySearchTree:
                 else:
                     return iterNode
 
-    def deleteMaxOrderNode(self) -> Union[TSBinaryNode, None]:
-        node = self.getMaxOrderNode()
+    def deleteMaxNode(self) -> Union[BinaryNode, None]:
+        node = self.maxNode()
         if node:
             if node.parentNode:
                 node.parentNode.rightChildNode = node.leftChildNode
@@ -304,8 +304,8 @@ class TSBinarySearchTree:
             node.parentNode = None
         return node
 
-    def deleteMinOrderNode(self) -> Union[TSBinaryNode, None]:
-        node = self.getMinOrderNode()
+    def deleteMinNode(self) -> Union[BinaryNode, None]:
+        node = self.minNode()
         if node:
             if node.parentNode:
                 node.parentNode.leftChildNode = node.rightChildNode
@@ -317,10 +317,10 @@ class TSBinarySearchTree:
             node.parentNode = None
         return node
 
-    def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
-        return self._beautifulPrint(self.rootNode, onlyOrder)
+    def package(self, onlyOrder: bool = False) -> Union[dict, list, None]:
+        return self._package(self.rootNode, onlyOrder)
 
-    def _beautifulPrint(self, node: Union[TSBinaryNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
+    def _package(self, node: Union[BinaryNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
         if not node:
             if onlyOrder:
                 return [None]
@@ -330,23 +330,23 @@ class TSBinarySearchTree:
             if onlyOrder:
                 return [
                     node.order,
-                    self._beautifulPrint(node.leftChildNode, onlyOrder),
-                    self._beautifulPrint(node.rightChildNode, onlyOrder)
+                    self._package(node.leftChildNode, onlyOrder),
+                    self._package(node.rightChildNode, onlyOrder)
                 ]
             else:
                 return {
-                    TSConstants.BinaryNode.order: node.order,
-                    TSConstants.BinaryNode.value: node.value,
-                    TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
-                    TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
+                    Constants.BinaryNode.order: node.order,
+                    Constants.BinaryNode.value: node.value,
+                    Constants.BinaryNode.leftChildNode: self._package(node.leftChildNode),
+                    Constants.BinaryNode.rightChildNode: self._package(node.rightChildNode)
                 }
 
-    def balanced(self):
-        orderedList = self.getOrderedList()
+    def balance(self):
+        orderedList = self.orderedList()
         if len(orderedList) > 2:
-            self.rootNode = self._balanced(orderedList)
+            self.rootNode = self._balance(orderedList)
 
-    def _balanced(self, orderedList: List[TSBinaryNode]) -> TSBinaryNode:
+    def _balance(self, orderedList: List[BinaryNode]) -> BinaryNode:
         if len(orderedList) == 1:
             orderedList[0].parentNode = None
             orderedList[0].leftChildNode = None
@@ -363,8 +363,8 @@ class TSBinarySearchTree:
         else:
             centerIndex = len(orderedList) // 2
             centerNode = orderedList[centerIndex]
-            leftNode = self._balanced(orderedList[:centerIndex])
-            rightNode = self._balanced(orderedList[centerIndex + 1:])
+            leftNode = self._balance(orderedList[:centerIndex])
+            rightNode = self._balance(orderedList[centerIndex + 1:])
             centerNode.parentNode = None
             centerNode.leftChildNode = leftNode
             centerNode.rightChildNode = rightNode
@@ -372,9 +372,9 @@ class TSBinarySearchTree:
             rightNode.parentNode = centerNode
             return centerNode
 
-    def merge(self, tree: 'TSBinarySearchTree'):
-        l1 = self.getOrderedList()
-        l2 = tree.getOrderedList()
+    def merge(self, tree: 'BinarySearchTree'):
+        l1 = self.orderedList()
+        l2 = tree.orderedList()
         orderedList = []
         while l1 and l2:
             if l1[0].order >= l2[0].order:
@@ -387,7 +387,7 @@ class TSBinarySearchTree:
             orderedList = orderedList + l1
         elif l2:
             orderedList = orderedList + l2
-        self.rootNode = self._balanced(orderedList)
+        self.rootNode = self._balance(orderedList)
         tree.rootNode = self.rootNode
 
     def clear(self):

@@ -1,5 +1,5 @@
-from .tsBinaryNode import TSBinaryNode as tsBinaryNode
-from .tsBinarySearchTree import TSBinarySearchTree as tsBinarySearchTree
-from .tsBinaryHeapNode import TSBinaryHeapNode as tsBinaryHeapNode
-from .tsBinaryHeap import TSBinaryHeap as tsBinaryHeap
-from .tsConstants import TSConstants as tsConstants
+from .binaryNode import BinaryNode
+from .binarySearchTree import BinarySearchTree
+from .binaryHeapNode import BinaryHeapNode
+from .binaryHeap import BinaryHeap
+from .constants import Constants

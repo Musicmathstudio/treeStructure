@@ -1,4 +1,4 @@
-class TSConstants:
+class Constants:
     class BinaryNode:
         order = 'order'
         value = 'value'

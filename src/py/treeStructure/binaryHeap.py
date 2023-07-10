@@ -1,15 +1,15 @@
-from .tsBinaryHeapNode import TSBinaryHeapNode
-from .tsConstants import TSConstants
+from .binaryHeapNode import BinaryHeapNode
+from .constants import Constants
 from typing import Union, Deque, List
 from collections import deque
 from itertools import islice
 from random import choice
 
 
-class TSBinaryHeap:
-    def __init__(self, node: Union[TSBinaryHeapNode, None] = None, heapStruct: str = TSConstants.BinaryHeap.min):
+class BinaryHeap:
+    def __init__(self, node: Union[BinaryHeapNode, None] = None, heapStruct: str = Constants.BinaryHeap.min):
         self.heapStruct = heapStruct
-        self.heapList: Deque[TSBinaryHeapNode] = deque()
+        self.heapList: Deque[BinaryHeapNode] = deque()
         self.heapDict = {}
         if node:
             self._checkNodeConnection(node)
@@ -17,12 +17,12 @@ class TSBinaryHeap:
             self.heapDict[node.order] = deque([node])
             node.index = 0
 
-    def _checkNodeConnection(self, node: Union[TSBinaryHeapNode, None] = None):
+    def _checkNodeConnection(self, node: Union[BinaryHeapNode, None] = None):
         if node:
             if node.parentNode or node.leftChildNode or node.rightChildNode:
                 raise Exception('Node is already in other tree')
 
-    def _appendNodeIntoDict(self, node: TSBinaryHeapNode):
+    def _appendNodeIntoDict(self, node: BinaryHeapNode):
         if node.order in self.heapDict:
             self.heapDict[node.order].append(node)
         else:
@@ -35,38 +35,38 @@ class TSBinaryHeap:
                 del self.heapDict[order]
 
     def _compare(self, x: Union[float, int], y: Union[float, int]) -> bool:
-        if self.heapStruct == TSConstants.BinaryHeap.min:
+        if self.heapStruct == Constants.BinaryHeap.min:
             return x < y
-        elif self.heapStruct == TSConstants.BinaryHeap.max:
+        elif self.heapStruct == Constants.BinaryHeap.max:
             return x > y
 
-    def _getSwapChild(self, node: TSBinaryHeapNode) -> Union[TSBinaryHeapNode, None]:
+    def _getSwapChild(self, node: BinaryHeapNode) -> Union[BinaryHeapNode, None]:
         if not node.leftChildNode and not node.rightChildNode:
             return None
         elif node.leftChildNode and not node.rightChildNode:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
+            if self.heapStruct == Constants.BinaryHeap.min:
                 if node.order > node.leftChildNode.order:
                     return node.leftChildNode
                 else:
                     return None
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
+            elif self.heapStruct == Constants.BinaryHeap.max:
                 if node.order < node.leftChildNode.order:
                     return node.leftChildNode
                 else:
                     return None
         elif not node.leftChildNode and node.rightChildNode:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
+            if self.heapStruct == Constants.BinaryHeap.min:
                 if node.order > node.rightChildNode.order:
                     return node.rightChildNode
                 else:
                     return None
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
+            elif self.heapStruct == Constants.BinaryHeap.max:
                 if node.order < node.rightChildNode.order:
                     return node.rightChildNode
                 else:
                     return None
         else:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
+            if self.heapStruct == Constants.BinaryHeap.min:
                 if node.leftChildNode.order < node.rightChildNode.order:
                     if node.order > node.leftChildNode.order:
                         return node.leftChildNode
@@ -77,7 +77,7 @@ class TSBinaryHeap:
                         return node.rightChildNode
                     else:
                         return None
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
+            elif self.heapStruct == Constants.BinaryHeap.max:
                 if node.leftChildNode.order > node.rightChildNode.order:
                     if node.order < node.leftChildNode.order:
                         return node.leftChildNode
@@ -89,7 +89,7 @@ class TSBinaryHeap:
                     else:
                         return None
 
-    def _swapUp(self, node: TSBinaryHeapNode):
+    def _swapUp(self, node: BinaryHeapNode):
         parentNode = node.parentNode
         while parentNode and self._compare(node.order, parentNode.order):
             self.heapList[parentNode.index], self.heapList[node.index] = \
@@ -129,7 +129,7 @@ class TSBinaryHeap:
 
             parentNode = node.parentNode
 
-    def _swapDown(self, node: TSBinaryHeapNode):
+    def _swapDown(self, node: BinaryHeapNode):
         childNode = self._getSwapChild(node)
         while childNode:
             self.heapList[childNode.index], self.heapList[node.index] = \
@@ -169,7 +169,7 @@ class TSBinaryHeap:
 
             childNode = self._getSwapChild(node)
 
-    def insertNode(self, node: TSBinaryHeapNode):
+    def insertNode(self, node: BinaryHeapNode):
         self._checkNodeConnection(node)
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
@@ -182,7 +182,7 @@ class TSBinaryHeap:
                 node.parentNode.rightChildNode = node
             self._swapUp(node)
 
-    def deleteNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
+    def deleteNode(self, order: Union[float, int]) -> Union[BinaryHeapNode, None]:
         deleteNode = self.getNodeByOrder(order)
         if deleteNode:
             self._deleteNodeInDictByOrder(order)
@@ -259,22 +259,19 @@ class TSBinaryHeap:
                 self._swapDown(node)
         return deleteNode
 
-    def getNodeByOrder(self, order: Union[float, int]) -> Union[TSBinaryHeapNode, None]:
-        return self.heapDict.get(order, [None])[0]
-
-    def getTreeHeight(self) -> int:
+    def height(self) -> int:
         nodeCount = len(self.heapList)
         if not nodeCount:
             return -1
         return len(bin(nodeCount)) - 3
 
-    def getTreeNodeCount(self) -> int:
+    def nodeCount(self) -> int:
         return len(self.heapList)
 
-    def getOrderedList(self, onlyOrder: bool = False) -> List[Union[TSBinaryHeapNode, float, int]]:
-        returnList: Deque[Union[TSBinaryHeapNode, float, int]] = deque()
+    def orderedList(self, onlyOrder: bool = False) -> List[Union[BinaryHeapNode, float, int]]:
+        returnList: Deque[Union[BinaryHeapNode, float, int]] = deque()
         length = len(self.heapList)
-        if self.heapStruct == TSConstants.BinaryHeap.max:
+        if self.heapStruct == Constants.BinaryHeap.max:
             for n in self.heapList:
                 returnList.append(n)
             for i in range(length - 1):
@@ -330,6 +327,9 @@ class TSBinaryHeap:
                 returnList[-1] = returnList[-1].order
         return list(returnList)
 
+    def getNodeByOrder(self, order: Union[float, int]) -> Union[BinaryHeapNode, None]:
+        return self.heapDict.get(order, [None])[0]
+
     def getRankByOrder(self, order: Union[float, int]) -> int:
         node = self.getNodeByOrder(order)
         if node:
@@ -341,12 +341,12 @@ class TSBinaryHeap:
         else:
             return -1
 
-    def getNodeByRank(self, rank: int) -> Union[TSBinaryHeapNode, None]:
+    def getNodeByRank(self, rank: int) -> Union[BinaryHeapNode, None]:
         if rank < 0 or rank > len(self.heapList):
             return None
         return self._getNodeByRank(self.heapList, rank)
 
-    def _getNodeByRank(self, array: Deque[TSBinaryHeapNode], rank: int) -> Union[TSBinaryHeapNode, None]:
+    def _getNodeByRank(self, array: Deque[BinaryHeapNode], rank: int) -> Union[BinaryHeapNode, None]:
         if not array:
             return None
         pivotNode = choice(array)
@@ -369,52 +369,52 @@ class TSBinaryHeap:
         else:
             return equalNode[0]
 
-    def getMaxOrderNode(self) -> Union[TSBinaryHeapNode, None]:
+    def maxNode(self) -> Union[BinaryHeapNode, None]:
         if not self.heapList:
             return None
         else:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
+            if self.heapStruct == Constants.BinaryHeap.min:
                 return max(islice(self.heapList, len(self.heapList) // 2, None), key=lambda node: node.order)
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
+            elif self.heapStruct == Constants.BinaryHeap.max:
                 return self.heapList[0]
 
-    def getMinOrderNode(self) -> Union[TSBinaryHeapNode, None]:
+    def minNode(self) -> Union[BinaryHeapNode, None]:
         if not self.heapList:
             return None
         else:
-            if self.heapStruct == TSConstants.BinaryHeap.max:
+            if self.heapStruct == Constants.BinaryHeap.max:
                 return min(islice(self.heapList, len(self.heapList) // 2, None), key=lambda node: node.order)
-            elif self.heapStruct == TSConstants.BinaryHeap.min:
+            elif self.heapStruct == Constants.BinaryHeap.min:
                 return self.heapList[0]
 
-    def deleteMaxOrderNode(self):
+    def deleteMaxNode(self):
         if self.heapList:
-            if self.heapStruct == TSConstants.BinaryHeap.max:
-                self.deleteNodeByOrder(self.heapList[0].order)
-            elif self.heapStruct == TSConstants.BinaryHeap.min:
-                maxNode = self.getMaxOrderNode()
+            if self.heapStruct == Constants.BinaryHeap.max:
+                self.deleteNode(self.heapList[0].order)
+            elif self.heapStruct == Constants.BinaryHeap.min:
+                maxNode = self.maxNode()
                 if maxNode:
-                    self.deleteNodeByOrder(maxNode.order)
+                    self.deleteNode(maxNode.order)
 
-    def deleteMinOrderNode(self):
+    def deleteMinNode(self):
         if self.heapList:
-            if self.heapStruct == TSConstants.BinaryHeap.min:
-                self.deleteNodeByOrder(self.heapList[0].order)
-            elif self.heapStruct == TSConstants.BinaryHeap.max:
-                minNode = self.getMinOrderNode()
+            if self.heapStruct == Constants.BinaryHeap.min:
+                self.deleteNode(self.heapList[0].order)
+            elif self.heapStruct == Constants.BinaryHeap.max:
+                minNode = self.minNode()
                 if minNode:
-                    self.deleteNodeByOrder(minNode.order)
+                    self.deleteNode(minNode.order)
 
-    def beautifulPrint(self, onlyOrder: bool = False) -> Union[dict, list, None]:
+    def package(self, onlyOrder: bool = False) -> Union[dict, list, None]:
         if self.heapList:
-            return self._beautifulPrint(self.heapList[0], onlyOrder)
+            return self._package(self.heapList[0], onlyOrder)
         else:
             if onlyOrder:
                 return [None]
             else:
                 return None
 
-    def _beautifulPrint(self, node: Union[TSBinaryHeapNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
+    def _package(self, node: Union[BinaryHeapNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
         if not node:
             if onlyOrder:
                 return [None]
@@ -424,27 +424,27 @@ class TSBinaryHeap:
             if onlyOrder:
                 return [
                     node.order,
-                    self._beautifulPrint(node.leftChildNode, onlyOrder),
-                    self._beautifulPrint(node.rightChildNode, onlyOrder)
+                    self._package(node.leftChildNode, onlyOrder),
+                    self._package(node.rightChildNode, onlyOrder)
                 ]
             else:
                 return {
-                    TSConstants.BinaryNode.order: node.order,
-                    TSConstants.BinaryNode.value: node.value,
-                    TSConstants.BinaryNode.leftChildNode: self._beautifulPrint(node.leftChildNode),
-                    TSConstants.BinaryNode.rightChildNode: self._beautifulPrint(node.rightChildNode)
+                    Constants.BinaryNode.order: node.order,
+                    Constants.BinaryNode.value: node.value,
+                    Constants.BinaryNode.leftChildNode: self._package(node.leftChildNode),
+                    Constants.BinaryNode.rightChildNode: self._package(node.rightChildNode)
                 }
 
-    def changeHeapStruct(self):
-        if self.heapStruct == TSConstants.BinaryHeap.max:
-            self.heapStruct = TSConstants.BinaryHeap.min
-        elif self.heapStruct == TSConstants.BinaryHeap.min:
-            self.heapStruct = TSConstants.BinaryHeap.max
+    def transform(self):
+        if self.heapStruct == Constants.BinaryHeap.max:
+            self.heapStruct = Constants.BinaryHeap.min
+        elif self.heapStruct == Constants.BinaryHeap.min:
+            self.heapStruct = Constants.BinaryHeap.max
         if len(self.heapList) > 1:
             for index in range(len(self.heapList) // 2 - 1, -1, -1):
                 self._swapDown(self.heapList[index])
 
-    def merge(self, tree: 'TSBinaryHeap'):
+    def merge(self, tree: 'BinaryHeap'):
         if len(self.heapList) >= len(tree.heapList):
             # Merge dict
             for key in tree.heapDict.keys():
