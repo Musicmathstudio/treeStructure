@@ -17,11 +17,22 @@ class BinaryNode:
         :param value: It can be anything you want to store. Default value is None.
         """
 
-        self.order: Union[float, int] = order
+        self._order: Union[float, int] = order
         self.value = value
         self.leftChildNode: Union[BinaryNode, None] = None
         self.rightChildNode: Union[BinaryNode, None] = None
         self.parentNode: Union[BinaryNode, None] = None
+
+    @property
+    def order(self) -> Union[float, int]:
+        return self._order
+
+    @order.setter
+    def order(self, newOrder: Union[float, int] = time()):
+        if self.parentNode or self.leftChildNode or self.rightChildNode:
+            raise Exception('You can not modify node order if node is already in other tree')
+        self._order = newOrder
+
 
     def package(self) -> dict:
         """
