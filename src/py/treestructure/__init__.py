@@ -8,12 +8,12 @@ Email: pi3141592676@yahoo.com.tw
 Usage example:
 
 >>> import treestructure
->>> import pprint
 >>> node = treestructure.BinaryNode(35, 'Stevie Wonder') # Create node
 >>> node.order
 35
 >>> node.value
 'Stevie Wonder'
+>>> import pprint
 >>> tree = treestructure.BinarySearchTree(node) # Create tree
 >>> tree.insertNode(treestructure.BinaryNode(45, 'Ray Charles')) # Insert node
 >>> tree.insertNode(treestructure.BinaryNode(25, 'Lionel Richie')) # Insert node

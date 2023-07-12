@@ -1,3 +1,7 @@
+"""
+Implementation of basic binary node.
+"""
+
 from time import time
 from typing import Union
 from .constants import Constants
@@ -6,6 +10,13 @@ from .constants import Constants
 class BinaryNode:
 
     def __init__(self, order: Union[float, int] = time(), value=None):
+        """
+        Basic binary node.
+
+        :param order: It's the priority when constructing the tree structure. Default order is current timestamp.
+        :param value: It can be anything you want to store. Default value is None.
+        """
+
         self.order: Union[float, int] = order
         self.value = value
         self.leftChildNode: Union[BinaryNode, None] = None
@@ -13,6 +24,12 @@ class BinaryNode:
         self.parentNode: Union[BinaryNode, None] = None
 
     def package(self) -> dict:
+        """
+        Package node information and return.
+
+        :return: A dictionary contains node's order, value, left child, right child and parent.
+        """
+
         res = {Constants.BinaryNode.order: self.order, Constants.BinaryNode.value: self.value}
         if self.leftChildNode:
             res[Constants.BinaryNode.leftChildNode] = {
