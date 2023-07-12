@@ -355,7 +355,7 @@ class BinarySearchTree:
         Get node by rank in sorted list.
 
         :param rank: Rank in sorted list.
-        :return: Node in tree. Return None if rank < 0 or rank >= node count
+        :return: Node in tree. Return None if rank < 0 or rank >= node count.
         """
 
         if rank < 0:

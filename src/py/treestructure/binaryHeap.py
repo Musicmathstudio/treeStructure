@@ -1,3 +1,9 @@
+"""
+Implementation of binary heap.
+
+I do some improve to reduce searching node time complexity from O(n) to O(1).
+"""
+
 from .binaryHeapNode import BinaryHeapNode
 from .constants import Constants
 from typing import Union, Deque, List
@@ -8,6 +14,15 @@ from random import choice
 
 class BinaryHeap:
     def __init__(self, node: Union[BinaryHeapNode, None] = None, heapStruct: str = Constants.BinaryHeap.min):
+        """
+        Basic binary heap.
+
+        :param node: Root node of tree.
+        :param heapStruct: Determine the struct of heap. It can be 'min' or 'max'.
+        """
+
+        if heapStruct != Constants.BinaryHeap.min and heapStruct != Constants.BinaryHeap.max:
+            raise Exception('Heap struct can only be min or max')
         self.heapStruct = heapStruct
         self.heapList: Deque[BinaryHeapNode] = deque()
         self.heapDict = {}
@@ -18,29 +33,65 @@ class BinaryHeap:
             node.index = 0
 
     def _checkNodeConnection(self, node: Union[BinaryHeapNode, None] = None):
+        """
+        Check whether node is already in another tree.
+
+        :param node: Heap node to check.
+        :return: None.
+        """
+
         if node:
             if node.parentNode or node.leftChildNode or node.rightChildNode:
                 raise Exception('Node is already in other tree')
 
     def _appendNodeIntoDict(self, node: BinaryHeapNode):
+        """
+        Append heap node into dictionary.
+
+        :param node: Heap node that will be inserted.
+        :return: None.
+        """
+
         if node.order in self.heapDict:
             self.heapDict[node.order].append(node)
         else:
             self.heapDict[node.order] = deque([node])
 
     def _deleteNodeInDictByOrder(self, order: Union[float, int]):
+        """
+        Delete heap node from dictionary.
+
+        :param order: Delete a node with same order.
+        :return: None.
+        """
+
         if order in self.heapDict:
             self.heapDict[order].popleft()
             if not len(self.heapDict[order]):
                 del self.heapDict[order]
 
     def _compare(self, x: Union[float, int], y: Union[float, int]) -> bool:
+        """
+        Compare two numbers by heap struct.
+
+        :param x: Number.
+        :param y: Number.
+        :return: Boolean.
+        """
+
         if self.heapStruct == Constants.BinaryHeap.min:
             return x < y
         elif self.heapStruct == Constants.BinaryHeap.max:
             return x > y
 
     def _getSwapChild(self, node: BinaryHeapNode) -> Union[BinaryHeapNode, None]:
+        """
+        Get child node to swap.
+
+        :param node: Node to swap.
+        :return: Child node to swap. Return None if swapping is not necessary.
+        """
+
         if not node.leftChildNode and not node.rightChildNode:
             return None
         elif node.leftChildNode and not node.rightChildNode:
@@ -90,6 +141,13 @@ class BinaryHeap:
                         return None
 
     def _swapUp(self, node: BinaryHeapNode):
+        """
+        Swap up with parent node.
+
+        :param node: Node to swap.
+        :return: None.
+        """
+
         parentNode = node.parentNode
         while parentNode and self._compare(node.order, parentNode.order):
             self.heapList[parentNode.index], self.heapList[node.index] = \
@@ -130,6 +188,13 @@ class BinaryHeap:
             parentNode = node.parentNode
 
     def _swapDown(self, node: BinaryHeapNode):
+        """
+        Swap down with children node.
+
+        :param node: Node to swap.
+        :return: None.
+        """
+
         childNode = self._getSwapChild(node)
         while childNode:
             self.heapList[childNode.index], self.heapList[node.index] = \
@@ -170,6 +235,13 @@ class BinaryHeap:
             childNode = self._getSwapChild(node)
 
     def insertNode(self, node: BinaryHeapNode):
+        """
+        Insert node into tree.
+
+        :param node: node that will be joined.
+        :return: None.
+        """
+
         self._checkNodeConnection(node)
         self.heapList.append(node)
         self._appendNodeIntoDict(node)
@@ -183,6 +255,13 @@ class BinaryHeap:
             self._swapUp(node)
 
     def deleteNode(self, order: Union[float, int]) -> Union[BinaryHeapNode, None]:
+        """
+        Delete node by order.
+
+        :param order: Delete a node with same order.
+        :return: The node that be removed. Return None if there's no node with same order.
+        """
+
         deleteNode = self.getNodeByOrder(order)
         if deleteNode:
             self._deleteNodeInDictByOrder(order)
@@ -260,15 +339,38 @@ class BinaryHeap:
         return deleteNode
 
     def height(self) -> int:
+        """
+        Tree height.
+
+        If there's no node in tree, height is -1.
+
+        If there's only one node in tree, height is 0.
+
+        :return: Tree height.
+        """
+
         nodeCount = len(self.heapList)
         if not nodeCount:
             return -1
         return len(bin(nodeCount)) - 3
 
     def nodeCount(self) -> int:
+        """
+        Calculate how many nodes in tree.
+
+        :return: Nodes number in tree.
+        """
+
         return len(self.heapList)
 
     def orderedList(self, onlyOrder: bool = False) -> List[Union[BinaryHeapNode, float, int]]:
+        """
+        Sort node by order.
+
+        :param onlyOrder: Return array only contains order if onlyOrder is True. Default is False.
+        :return: Sorted list.
+        """
+
         returnList: Deque[Union[BinaryHeapNode, float, int]] = deque()
         length = len(self.heapList)
         if self.heapStruct == Constants.BinaryHeap.max:
@@ -328,9 +430,25 @@ class BinaryHeap:
         return list(returnList)
 
     def getNodeByOrder(self, order: Union[float, int]) -> Union[BinaryHeapNode, None]:
+        """
+        Search node by giving order.
+
+        :param order: Find node with same order.
+        :return: Node with same order. Return None if there's no node with same order.
+        """
+
         return self.heapDict.get(order, [None])[0]
 
     def getRankByOrder(self, order: Union[float, int]) -> int:
+        """
+        Check the rank of node in sorted list with specific order. Rank start with 0.
+
+        If there's no node with same order. Rank is -1.
+
+        :param order: Node order.
+        :return: Rank of node in sorted list. Return -1 if there's no node with same order.
+        """
+
         node = self.getNodeByOrder(order)
         if node:
             smallerNodeCount = 0
@@ -342,11 +460,26 @@ class BinaryHeap:
             return -1
 
     def getNodeByRank(self, rank: int) -> Union[BinaryHeapNode, None]:
+        """
+        Get node by rank in sorted list.
+
+        :param rank: Rank in sorted list.
+        :return: Node in tree. Return None if rank < 0 or rank >= node count.
+        """
+
         if rank < 0 or rank > len(self.heapList):
             return None
         return self._getNodeByRank(self.heapList, rank)
 
     def _getNodeByRank(self, array: Deque[BinaryHeapNode], rank: int) -> Union[BinaryHeapNode, None]:
+        """
+        Get node by rank in sorted list with specific tree.
+
+        :param array: Heap tree.
+        :param rank: Rank in sorted list.
+        :return: Node in tree. Return None tree is empty.
+        """
+
         if not array:
             return None
         pivotNode = choice(array)
@@ -370,6 +503,12 @@ class BinaryHeap:
             return equalNode[0]
 
     def maxNode(self) -> Union[BinaryHeapNode, None]:
+        """
+        Get max node in tree.
+
+        :return: Max node in tree.
+        """
+
         if not self.heapList:
             return None
         else:
@@ -379,6 +518,12 @@ class BinaryHeap:
                 return self.heapList[0]
 
     def minNode(self) -> Union[BinaryHeapNode, None]:
+        """
+        Get min order node in tree.
+
+        :return: Min order node in tree.
+        """
+
         if not self.heapList:
             return None
         else:
@@ -388,6 +533,12 @@ class BinaryHeap:
                 return self.heapList[0]
 
     def deleteMaxNode(self):
+        """
+        Delete max order node in tree.
+
+        :return: The node that be removed. Return None if there's no node in tree.
+        """
+
         if self.heapList:
             if self.heapStruct == Constants.BinaryHeap.max:
                 self.deleteNode(self.heapList[0].order)
@@ -397,6 +548,12 @@ class BinaryHeap:
                     self.deleteNode(maxNode.order)
 
     def deleteMinNode(self):
+        """
+        Delete min order node in tree.
+
+        :return: The node that be removed. Return None if there's no node in tree.
+        """
+
         if self.heapList:
             if self.heapStruct == Constants.BinaryHeap.min:
                 self.deleteNode(self.heapList[0].order)
@@ -406,6 +563,13 @@ class BinaryHeap:
                     self.deleteNode(minNode.order)
 
     def package(self, onlyOrder: bool = False) -> Union[dict, list, None]:
+        """
+        Package tree structure and return.
+
+        :param onlyOrder: Return tree only contains order in each node if onlyOrder is True. Default is False.
+        :return: Tree structure as dictionary. Return type is list if onlyOrder is True. Return None if tree is empty.
+        """
+
         if self.heapList:
             return self._package(self.heapList[0], onlyOrder)
         else:
@@ -415,6 +579,14 @@ class BinaryHeap:
                 return None
 
     def _package(self, node: Union[BinaryHeapNode, None], onlyOrder: bool = False) -> Union[dict, list, None]:
+        """
+        Package tree structure and return.
+
+        :param node: Root node of tree.
+        :param onlyOrder: Return tree only contains order in each node if onlyOrder is True. Default is False.
+        :return: Tree structure as dictionary. Return type is list if onlyOrder is True. Return None if tree is empty.
+        """
+
         if not node:
             if onlyOrder:
                 return [None]
@@ -436,6 +608,12 @@ class BinaryHeap:
                 }
 
     def transform(self):
+        """
+        Transform from min heap to max heap/max heap to min heap.
+
+        :return: None.
+        """
+
         if self.heapStruct == Constants.BinaryHeap.max:
             self.heapStruct = Constants.BinaryHeap.min
         elif self.heapStruct == Constants.BinaryHeap.min:
@@ -445,6 +623,15 @@ class BinaryHeap:
                 self._swapDown(self.heapList[index])
 
     def merge(self, tree: 'BinaryHeap'):
+        """
+        Merge two tree.
+
+        Heap struct of merged tree is equal to the tree that node count is smaller.
+
+        :param tree: Tree will be merged.
+        :return: None.
+        """
+
         if len(self.heapList) >= len(tree.heapList):
             # Merge dict
             for key in tree.heapDict.keys():
@@ -474,6 +661,11 @@ class BinaryHeap:
             tree.merge(self)
 
     def clear(self):
+        """
+        Clear tree.
+
+        :return: None.
+        """
         for node in self.heapList:
             node.parentNode = None
             node.leftChildNode = None
