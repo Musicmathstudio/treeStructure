@@ -1,30 +1,20 @@
-# Tree Structure
-
-![Pypi link](https://img.shields.io/pypi/v/treestructure.svg?style=flat-square)
-
+"""
 Tree Structure is a module that implements some common trees in data structure.
 
-## Quick Start
+Author: Tony Chiu, Musicmath studio
 
-There are two basic components in each type of tree structure: **Node** and **Tree**.  
-Each node has two basic attributes: **order** and **value**.  
-Order is the key to construct the tree structure. Default order is current timestamp.  
-Value can be anything you want to store. Default value is None.
+Email: pi3141592676@yahoo.com.tw
 
-``` python
+Website: https://github.com/Musicmathstudio/treeStructure
+
+Usage example:
+
 >>> import treestructure
 >>> node = treestructure.BinaryNode(35, 'Stevie Wonder') # Create node
 >>> node.order
 35
 >>> node.value
 'Stevie Wonder'
-```
-
-Insert node into tree to build the tree structure.  
-Use package() to check the tree structure.
-It's better using package() with [pprint](https://docs.python.org/3/library/pprint.html) module.
-
-``` python
 >>> import pprint
 >>> tree = treestructure.BinarySearchTree(node) # Create tree
 >>> tree.insertNode(treestructure.BinaryNode(45, 'Ray Charles')) # Insert node
@@ -40,11 +30,6 @@ It's better using package() with [pprint](https://docs.python.org/3/library/ppri
                     'value': 'Ray Charles',
                     'leftChildNode': None,
                     'rightChildNode': None}}
-```
-
-Delete node by specific order.
-
-``` python
 >>> delNode = tree.deleteNode(35) # Delete node
 >>> pprint.pprint(delNode.package(), sort_dicts=False) # Display node
 {'order': 35,
@@ -60,10 +45,10 @@ Delete node by specific order.
                     'value': 'Ray Charles',
                     'leftChildNode': None,
                     'rightChildNode': None}}
-```
+"""
 
-## Contents
-
-- [Binary Node](https://github.com/Musicmathstudio/treeStructure/blob/main/doc/binaryNode.md)
-- [Binary Search Tree](https://github.com/Musicmathstudio/treeStructure/blob/main/doc/bst.md)
-- [Binary Heap](https://github.com/Musicmathstudio/treeStructure/blob/main/doc/heap.md)
+from .binaryNode import BinaryNode
+from .binarySearchTree import BinarySearchTree
+from .binaryHeap import BinaryHeap
+from .constants import Constants
+from .version import __version__
