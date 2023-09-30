@@ -261,12 +261,12 @@ class BinarySearchTree:
             while node:
                 stk.append(node)
                 node = node._leftChildNode
-            node = stk.pop();
+            node = stk.pop()
             if onlyOrder:
-                orderedList.append(node._order);
+                orderedList.append(node._order)
             else:
                 orderedList.append(node)
-            node = node._rightChildNode;
+            node = node._rightChildNode
         return orderedList
 
     def getNodeByOrder(self, order: Union[float, int]) -> Union[BinaryNode, None]:
